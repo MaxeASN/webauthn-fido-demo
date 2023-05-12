@@ -1,0 +1,14 @@
+#page-index .coin-box .add-token-box {
+    position: absolute;
+    bottom: 43%;
+    right: 0;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 32px;
+    height: 32px;
+    background: var(--up-bg);
+    box-shadow: inset 1px 1px 3px var(--up-bg-solid);
+    border-radius: 30px;
+    cursor: pointer;
+}
