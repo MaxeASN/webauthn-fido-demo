@@ -1158,7 +1158,7 @@
   margin-left: auto;
 }
 @media screen and (min-width: 480px) {
-  .chain-select-options .option:not(#ETH) {
+  .chain-select-options .option#chain-BSC,.option#chain-Polygon,.option#chain-Avalanche,.option#chain-Arbitrum,.option#chain-Rangers,.option#chain-OKC,.option#chain-KCC {
     padding: 20px 40px;
     filter: grayscale(100%);
     cursor: not-allowed;

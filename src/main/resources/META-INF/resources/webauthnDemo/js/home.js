@@ -174,3 +174,46 @@ function formatDate(dateString) {
 
     return `${month} ${day} ·`;
 }
+
+//获取用户地址列表并显示
+let addressOptionDiv = document.querySelector(".chain-select-container.address-options");
+function displayL1Address() {
+    if (addressOptionDiv.style.display === "none") {
+        fetch(GET_L1ADDRESS)
+            .then(response => response.json())
+            .then(({code: c, message: m, data: d}) => [c, m, d])
+            .then(([code, message, data]) => {
+                if (code != 1) throw new Error(message);
+                if (data.length > 0) {
+                    // 获取父元素和按钮元素
+                    let parentDiv = document.querySelector(".chain-select-options.chain-options");
+                    let buttonDiv = parentDiv.querySelector(".button-box.button-box-padding");
+                    let previousAddressList = parentDiv.querySelectorAll(".option");
+                    for (let i=0;i<previousAddressList.length;i++){
+                        parentDiv.removeChild(previousAddressList[i]);
+                    }
+                    for (let i = 0; i < data.length; i++) {
+                        let optionDiv = document.createElement("div");
+                        optionDiv.className = "option";
+                        let labelDiv = document.createElement("div")
+                        labelDiv.className = "label";
+                        labelDiv.innerText = data[i];
+                        optionDiv.appendChild(labelDiv)
+                        parentDiv.insertBefore(optionDiv, buttonDiv);
+                    }
+                }
+            })
+            .catch(error => console.error("查询l1地址失败:" + error));
+        //取消显示主网选择
+        let setIcon = document.querySelector(".setting-icons");
+        if (setIcon.getAttribute("data-display") === "true") {
+            showCoinMenu();
+        }
+
+        document.querySelector(".up-home-page-header").classList.add("up-home-page-header-bg");
+        addressOptionDiv.style.display = "";
+    }else{
+        document.querySelector(".up-home-page-header").classList.remove("up-home-page-header-bg");
+        addressOptionDiv.style.display = "none";
+    }
+}

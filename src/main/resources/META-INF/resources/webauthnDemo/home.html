@@ -93,12 +93,25 @@
                                     <div class="email" th:text="${username}"></div>
                                     <div class="address" id="display-address">
                                         <span th:text="${address}"></span>
-                                        <iconpark-icon icon-id="copy" class="iconpark icon-copy" name="" size="1em" width="" height=""></iconpark-icon>
+                                        <iconpark-icon icon-id="copy" class="iconpark icon-copy" name="" size="1em" width="" height="" title="复制地址"></iconpark-icon>
+                                        <img src="img/switch.svg" style="margin-left: 6px" id="switch-address" title="切换地址" onclick="displayL1Address()">
+                                    </div>
+                                </div>
+                                <div class="chain-select-container address-options" style="display: none">
+                                    <div class="chain-select-options chain-options" style="border-bottom: 1px solid #c3c3c3;">
+                                        <div class="button-box button-box-padding" style="margin-bottom: 20px; margin-left: 46px;">
+                                            <button class="el-button el-button--info up-button" aria-disabled="false" type="button" style="width: 180px;margin-right: 10px;">
+                                                <span class=""><iconpark-icon icon-id="add-token" class="iconpark icon-add-token" name="" size="1em" width="" height=""></iconpark-icon> 创建账户</span>
+                                            </button>
+                                            <button class="el-button el-button--info up-button" aria-disabled="false" type="button" style="width: 180px;">
+                                                <span class=""><img src="img/import.svg" style="width: 22px;height: 22px;"> 导入账户</span>
+                                            </button>
+                                        </div>
                                     </div>
                                 </div>
                             </div>
                             <div class="setting-icons" data-display="false">
-                                <iconpark-icon icon-id="ETH" class="iconpark icon-ETH setting" name="" size="1em" width="" height=""></iconpark-icon>
+                                <iconpark-icon icon-id="ETH" id="setting-coin-icon" class="iconpark icon-ETH setting" name="" size="1em" width="" height=""></iconpark-icon>
                                 <a href="/logout" class="setting">
                                     <iconpark-icon icon-id="exit" class="iconpark icon-exit" name="" size="1em" width="" height=""></iconpark-icon>
                                 </a>
@@ -251,7 +264,6 @@
                                 </div>
                             </div>
                         </div>
-                        <div class="add-token-box"><iconpark-icon icon-id="add-token" class="iconpark icon-add-token" name="" size="1em" width="" height=""></iconpark-icon></div>
                     </div>
                 </div>
                 <div class="el-overlay" style="z-index: 2012; display: none;">
@@ -355,53 +367,56 @@
     </script>
     <script>
         <!--   显示和隐藏币种菜单     -->
-        let coinMenu = document.querySelector("#page-index > div.main-container > div.up-home-page-header > div > div.setting-icons > iconpark-icon");
+        let coinMenu = document.getElementById("setting-coin-icon");
         coinMenu.addEventListener('click', showCoinMenu);
 
         function showCoinMenu(){
+            if (addressOptionDiv.style.display !== "none") {
+                displayL1Address();
+            }
             let setIcon = document.querySelector(".setting-icons");
-            if(setIcon.getAttribute("data-display") == "false"){
+            if(setIcon.getAttribute("data-display") === "false"){
                 setIcon.setAttribute("data-display", "true");
                 let newDevHtml = `
                 <div class="cover" style="height: 710px;"></div>
-                <div class="chain-select-container">
+                <div class="chain-select-container" id="chain-select-container">
 \t<div class="chain-select-options chain-options">
-\t\t<div class="option" id="ETH">
+\t\t<div class="option" id="chain-ETH">
 \t\t\t<iconpark-icon icon-id="ETH" class="iconpark icon-ETH" name="" size="1em" width="24" height="24"></iconpark-icon>
 \t\t\t<div class="label">ETH</div>
 \t\t\t<iconpark-icon icon-id="round-select" class="iconpark icon-round-select round-select" name="" size="1em" width="" height=""></iconpark-icon>
 \t\t</div>
-\t\t<div class="option">
+\t\t<div class="option" id="chain-BSC">
 \t\t\t<iconpark-icon icon-id="BSC" class="iconpark icon-BSC" name="" size="1em" width="24" height="24"></iconpark-icon>
 \t\t\t<div class="label">BSC</div>
 \t\t\t<!---->
 \t\t</div>
-\t\t<div class="option">
+\t\t<div class="option" id="chain-Polygon">
 \t\t\t<iconpark-icon icon-id="Polygon" class="iconpark icon-Polygon" name="" size="1em" width="24" height="24"></iconpark-icon>
 \t\t\t<div class="label">Polygon</div>
 \t\t\t<!---->
 \t\t</div>
-\t\t<div class="option">
+\t\t<div class="option" id="chain-Arbitrum">
 \t\t\t<iconpark-icon icon-id="Arbitrum" class="iconpark icon-Arbitrum" name="" size="1em" width="24" height="24"></iconpark-icon>
 \t\t\t<div class="label">Arbitrum</div>
 \t\t\t<!---->
 \t\t</div>
-\t\t<div class="option">
+\t\t<div class="option" id="chain-Avalanche">
 \t\t\t<iconpark-icon icon-id="Avalanche" class="iconpark icon-Avalanche" name="" size="1em" width="24" height="24"></iconpark-icon>
 \t\t\t<div class="label">Avalanche</div>
 \t\t\t<!---->
 \t\t</div>
-\t\t<div class="option">
+\t\t<div class="option" id="chain-KCC">
 \t\t\t<iconpark-icon icon-id="KCC" class="iconpark icon-KCC" name="" size="1em" width="24" height="24"></iconpark-icon>
 \t\t\t<div class="label">KCC</div>
 \t\t\t<!---->
 \t\t</div>
-\t\t<div class="option">
+\t\t<div class="option" id="chain-Rangers">
 \t\t\t<iconpark-icon icon-id="Rangers" class="iconpark icon-Rangers" name="" size="1em" width="24" height="24"></iconpark-icon>
 \t\t\t<div class="label">Rangers</div>
 \t\t\t<!---->
 \t\t</div>
-\t\t<div class="option">
+\t\t<div class="option" id="chain-OKC">
 \t\t\t<iconpark-icon icon-id="OKC" class="iconpark icon-OKC" name="" size="1em" width="24" height="24"></iconpark-icon>
 \t\t\t<div class="label">OKC</div>
 \t\t\t<!---->
@@ -417,7 +432,7 @@
                 setIcon.setAttribute("data-display", "false");
                 let e1 = document.querySelector(".cover");
                 e1.parentElement.removeChild(e1);
-                let e2 = document.querySelector(".chain-select-container");
+                let e2 = document.getElementById("chain-select-container");
                 e2.parentElement.removeChild(e2);
                 document.querySelector(".up-home-page-header").classList.remove("up-home-page-header-bg");
             }
