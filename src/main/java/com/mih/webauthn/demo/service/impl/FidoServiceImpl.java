@@ -1,6 +1,8 @@
 package com.mih.webauthn.demo.service.impl;
 
 import com.mih.webauthn.demo.constant.ERC4337Const;
+import com.mih.webauthn.demo.domain.L1Address;
+import com.mih.webauthn.demo.domain.L1AddressRepo;
 import com.mih.webauthn.demo.domain.Wallet;
 import com.mih.webauthn.demo.domain.WalletRepo;
 import com.mih.webauthn.demo.service.FidoService;
@@ -23,6 +25,7 @@ import org.web3j.protocol.core.DefaultBlockParameterName;
 import org.web3j.protocol.core.methods.request.EthFilter;
 
 import java.math.BigInteger;
+import java.time.LocalDateTime;
 import java.util.Arrays;
 
 @Service
@@ -32,6 +35,9 @@ public class FidoServiceImpl implements FidoService {
 
     @Autowired
     private WalletRepo walletRepo;
+
+    @Autowired
+    private L1AddressRepo l1AddressRepo;
 
     @Override
     public Wallet registerAddressAndPrivateKey(long userId) {
@@ -55,6 +61,15 @@ public class FidoServiceImpl implements FidoService {
             String transactionHash = log.getTransactionHash();
             System.out.println(transactionHash);
         });
+    }
+
+    @Override
+    public void registerL1Address(Long appUserId, String address) {
+        L1Address entity = new L1Address();
+        entity.setAppUserId(appUserId);
+        entity.setL1Address(address);
+        entity.setCreateTime(LocalDateTime.now());
+        l1AddressRepo.save(entity);
     }
 
 }

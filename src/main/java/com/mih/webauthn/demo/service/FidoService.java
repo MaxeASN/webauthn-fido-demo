@@ -13,4 +13,5 @@ public interface FidoService {
 
     void monitorTransaction(Web3j web3j);
 
+    void registerL1Address(Long appUserId, String address);
 }

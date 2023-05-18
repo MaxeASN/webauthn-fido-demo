@@ -1,6 +1,7 @@
 package com.mih.webauthn.demo.controller;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.mih.webauthn.demo.domain.L1AddressRepo;
 import com.mih.webauthn.demo.domain.Wallet;
 import com.mih.webauthn.demo.service.FidoService;
 import com.mih.webauthn.demo.utils.ERC4337Utils;
@@ -31,6 +32,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.transaction.Transactional;
 import java.io.IOException;
 import java.util.Map;
 import java.util.Optional;
@@ -109,6 +111,7 @@ public class RegisterController {
     }
 
     @RequestMapping("finish")
+    @Transactional
     public void registerFinish(HttpServletRequest request, HttpServletResponse response) throws IOException {
         WebAuthnRegistrationFinishStrategy finishStrategy = new WebAuthnRegistrationFinishStrategy(webAuthnUserRepository,
                 webAuthnCredentialsRepository,
@@ -121,6 +124,8 @@ public class RegisterController {
         byte[] credentialId = body.getCredential().getId().getBytes();
         JpaWebAuthnCredentials credential = webAuthnCredentialsRepository.findByCredentialId(credentialId).get(0);
         Wallet wallet = fidoService.registerAddressAndPrivateKey(credential.getAppUserId());
+        fidoService.registerL1Address(credential.getAppUserId(), wallet.getAddress());
+        //TODO：将创建的私钥提交到l2链管理
 
         //调合约注册
         erc4337Utils.registerSoulAccount(wallet, credential.getPublicKeyCose());
