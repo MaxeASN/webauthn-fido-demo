@@ -93,11 +93,18 @@ tokenTab.addEventListener('click', function (){
 
 //displayBalance
 let address = document.querySelector("#display-address > span").innerText;
+const username = document.getElementById("display-username").innerText;
+Cookies.set("username", username, { expires: 36500 })
+function disPlayAddress(){
+    if(address && username){
+        let displayAddress = Cookies.get(username+"_select_address") || address;
+        displayAddress = displayAddress.substring(0, 6) + '...' + displayAddress.substring(37);
+        document.querySelector("#display-address > span").innerText = displayAddress;
+    }
+}
+disPlayAddress()
 if(address){
-    let displayAddress = address.substring(0, 6) + '...' + address.substring(37);
-    document.querySelector("#display-address > span").innerText = displayAddress;
     getAndUpdateMainCoinBalance();
-
     setInterval(() => {
         getAndUpdateMainCoinBalance();
     }, 10000); //10秒刷新一次余额
@@ -179,31 +186,7 @@ function formatDate(dateString) {
 let addressOptionDiv = document.querySelector(".chain-select-container.address-options");
 function displayL1Address() {
     if (addressOptionDiv.style.display === "none") {
-        fetch(GET_L1ADDRESS)
-            .then(response => response.json())
-            .then(({code: c, message: m, data: d}) => [c, m, d])
-            .then(([code, message, data]) => {
-                if (code != 1) throw new Error(message);
-                if (data.length > 0) {
-                    // 获取父元素和按钮元素
-                    let parentDiv = document.querySelector(".chain-select-options.chain-options");
-                    let buttonDiv = parentDiv.querySelector(".button-box.button-box-padding");
-                    let previousAddressList = parentDiv.querySelectorAll(".option");
-                    for (let i=0;i<previousAddressList.length;i++){
-                        parentDiv.removeChild(previousAddressList[i]);
-                    }
-                    for (let i = 0; i < data.length; i++) {
-                        let optionDiv = document.createElement("div");
-                        optionDiv.className = "option";
-                        let labelDiv = document.createElement("div")
-                        labelDiv.className = "label";
-                        labelDiv.innerText = data[i];
-                        optionDiv.appendChild(labelDiv)
-                        parentDiv.insertBefore(optionDiv, buttonDiv);
-                    }
-                }
-            })
-            .catch(error => console.error("查询l1地址失败:" + error));
+        updateL1Address();
         //取消显示主网选择
         let setIcon = document.querySelector(".setting-icons");
         if (setIcon.getAttribute("data-display") === "true") {
@@ -212,8 +195,53 @@ function displayL1Address() {
 
         document.querySelector(".up-home-page-header").classList.add("up-home-page-header-bg");
         addressOptionDiv.style.display = "";
+        document.getElementById("cover-address-select").style.display = "";
     }else{
         document.querySelector(".up-home-page-header").classList.remove("up-home-page-header-bg");
-        addressOptionDiv.style.display = "none";
+        addressOptionDiv.style.display = "none"
+        document.getElementById("cover-address-select").style.display = "none";
     }
+}
+
+function updateL1Address(){
+    if(username === "" || address==="") return;
+    let selectAddress = Cookies.get(username+"_select_address") || address;
+    fetch(GET_L1ADDRESS)
+        .then(response => response.json())
+        .then(({code: c, message: m, data: d}) => [c, m, d])
+        .then(([code, message, data]) => {
+            if (code != 1) throw new Error(message);
+            if (data.length > 0) {
+                // 获取父元素和按钮元素
+                let parentDiv = document.querySelector(".chain-select-options.chain-options");
+                let buttonDiv = parentDiv.querySelector(".button-box.button-box-padding");
+                let previousAddressList = parentDiv.querySelectorAll(".option");
+                for (let i=0;i<previousAddressList.length;i++){
+                    parentDiv.removeChild(previousAddressList[i]);
+                }
+                for (let i = 0; i < data.length; i++) {
+                    let optionDiv = document.createElement("div");
+                    optionDiv.className = "option";
+                    let labelDiv = document.createElement("div")
+                    labelDiv.className = "label";
+                    labelDiv.innerText = data[i];
+                    optionDiv.appendChild(labelDiv);
+                    optionDiv.addEventListener("click", updateDisplayAddress);
+                    if(data[i] === selectAddress){
+                        labelDiv.insertAdjacentHTML("afterend", `<iconpark-icon icon-id="round-select" class="iconpark icon-round-select round-select" name="" size="1em" width="" height=""></iconpark-icon>`);
+                    }else{
+                        labelDiv.insertAdjacentHTML("afterend", `<img src="img/delete.svg" style="margin-left: auto">`);
+                    }
+                    parentDiv.insertBefore(optionDiv, buttonDiv);
+                }
+            }
+        })
+        .catch(error => console.error("查询l1地址失败:" + error));
+}
+
+function updateDisplayAddress(event) {
+    const selectAddress = event.currentTarget.querySelector(".label").innerText;
+    Cookies.set(username + "_select_address", selectAddress, {expires: 36500});
+    displayL1Address();
+    disPlayAddress();
 }

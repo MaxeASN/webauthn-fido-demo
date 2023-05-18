@@ -65,6 +65,7 @@
         <link rel="stylesheet" type="text/css" href="/css/3941.4d472385.css">
         <link rel="stylesheet" type="text/css" href="/css/home.css">
         <script src="https://cdn.jsdelivr.net/npm/web3@1.5.2/dist/web3.min.js"></script>
+        <script src="https://cdn.jsdelivr.net/npm/js-cookie@3.0.0/dist/js.cookie.min.js"></script>
     </head>
     <body class="" style="">
     <noscript>
@@ -90,13 +91,14 @@
                             <div class="user">
                                 <div class="left"></div>
                                 <div class="right">
-                                    <div class="email" th:text="${username}"></div>
+                                    <div class="email" id="display-username" th:text="${username}"></div>
                                     <div class="address" id="display-address">
                                         <span th:text="${address}"></span>
                                         <iconpark-icon icon-id="copy" class="iconpark icon-copy" name="" size="1em" width="" height="" title="复制地址"></iconpark-icon>
                                         <img src="img/switch.svg" style="margin-left: 6px" id="switch-address" title="切换地址" onclick="displayL1Address()">
                                     </div>
                                 </div>
+                                <div class="cover" style="height: 710px; display: none;" id="cover-address-select"></div>
                                 <div class="chain-select-container address-options" style="display: none">
                                     <div class="chain-select-options chain-options" style="border-bottom: 1px solid #c3c3c3;">
                                         <div class="button-box button-box-padding" style="margin-bottom: 20px; margin-left: 46px;">
@@ -378,7 +380,7 @@
             if(setIcon.getAttribute("data-display") === "false"){
                 setIcon.setAttribute("data-display", "true");
                 let newDevHtml = `
-                <div class="cover" style="height: 710px;"></div>
+                <div class="cover" style="height: 710px;" id="cover-chain-select"></div>
                 <div class="chain-select-container" id="chain-select-container">
 \t<div class="chain-select-options chain-options">
 \t\t<div class="option" id="chain-ETH">
@@ -430,7 +432,7 @@
                 document.getElementById("ETH").addEventListener("click", showCoinMenu);
             } else {
                 setIcon.setAttribute("data-display", "false");
-                let e1 = document.querySelector(".cover");
+                let e1 = document.getElementById("cover-chain-select");
                 e1.parentElement.removeChild(e1);
                 let e2 = document.getElementById("chain-select-container");
                 e2.parentElement.removeChild(e2);

@@ -10,10 +10,11 @@ class e extends HTMLElement {
     }
     symbol = this.getAttribute("symbol");
     amount = this.getAttribute("amount");
-    address = this.getAttribute("address");
+    to = this.getAttribute("to");
+    from = this.getAttribute("from");
 
     static get observedAttributes() {
-        return ["no-username", "label", "input-type", "input-name", "button-text", "symbol", "amount", "address"]
+        return ["no-username", "label", "input-type", "input-name", "button-text"]
     }
 
     connectedCallback() {
@@ -49,15 +50,6 @@ class e extends HTMLElement {
             case"input-name":
                 s.name = n || this.inputName;
                 break;
-            case "symbol":
-                this.symbol = n;
-                break;
-            case "address":
-                this.address = n;
-                break;
-            case "amount":
-                this.amount = n;
-                break;
         }
     }
 
@@ -66,8 +58,10 @@ class e extends HTMLElement {
             `
             <div class="amount-confirm-text" style="font-weight: bolder;margin-top: 10px;margin-bottom: -10px;">转账金额：</div>
             <div class="amount" id="amount-confirm" data-v-7bb2b20a="" style="margin-top: 20px;background: #f9f9f9;border-radius: 12px;padding: 10px 20px;font-size: 14px;font-weight: 400;color: #1f202a;line-height: 26px;">${this.amount} ${this.symbol}</div>
-            <div class="address-confirm-text" style="font-weight: bolder;margin-top: 10px;margin-bottom: -10px;">转账地址：</div>
-            <div class="address" id="address-confirm" data-v-7bb2b20a="" style="margin-top: 20px;background: #f9f9f9;border-radius: 12px;padding: 10px 20px;font-size: 14px;font-weight: 400;color: #1f202a;line-height: 26px;">${this.address}</div>
+            <div class="address-confirm-text" style="font-weight: bolder;margin-top: 10px;margin-bottom: -10px;">from：</div>
+            <div class="address" id="address-confirm" data-v-7bb2b20a="" style="margin-top: 20px;background: #f9f9f9;border-radius: 12px;padding: 10px 20px;font-size: 14px;font-weight: 400;color: #1f202a;line-height: 26px;">${this.from}</div>
+            <div class="address-confirm-text" style="font-weight: bolder;margin-top: 10px;margin-bottom: -10px;">to：</div>
+            <div class="address" id="address-confirm" data-v-7bb2b20a="" style="margin-top: 20px;background: #f9f9f9;border-radius: 12px;padding: 10px 20px;font-size: 14px;font-weight: 400;color: #1f202a;line-height: 26px;">${this.to}</div>
             <div class="tips" style="margin-top: 10px;">
                 <iconpark-icon icon-id="exclamation-point" class="iconpark icon-exclamation-point icon" name="" size="1em" width="" height=""></iconpark-icon>
                 <span style="color: var(--up-primary);font-weight: 500;font-size: 14px;line-height: 20px;">请核对以上信息是否有误</span>
@@ -170,10 +164,10 @@ class e extends HTMLElement {
             const symbolEnum = this.getSymbolEnum(symbol);
             const n = await fetch(this.assertionStartUrl, {
                 ...this.fetchOptions,
-                body: JSON.stringify({coin: symbolEnum, toAddress: this.address, amount: this.amount})
+                body: JSON.stringify({coin: symbolEnum, fromAddress: this.from, toAddress: this.to, amount: this.amount})
             }), {assertionId: i, publicKeyCredentialRequestOptions: s, requestParams: p} = await n.json();
             if (!n.ok) throw new Error("Could not successfuly start login");
-            if(p.toAddress != this.address || p.amount != this.amount) throw new Error("The transaction content has been changed!");
+            if(p.toAddress != this.to || p.amount != this.amount || p.fromAddress != this.from) throw new Error("The transaction content has been changed!");
             const r = await this._getPublicKeyCredentialRequestOptionsDecoder(),
                 o = await navigator.credentials.get({publicKey: r(s)});
             this.dispatchEvent(new CustomEvent("login-retrieved"));

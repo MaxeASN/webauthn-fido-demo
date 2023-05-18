@@ -59,6 +59,7 @@
 <!--    <script recaptcha-v3-script="" src="https://www.google.com/recaptcha/api.js?render=explicit"></script>-->
     <link rel="stylesheet" type="text/css" href="/css/6592.acb1dd5a.css">
     <script type="module" src="js/webauthn-transaction.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/js-cookie@3.0.0/dist/js.cookie.min.js"></script>
 </head>
 <body class="">
 <noscript>
@@ -284,12 +285,14 @@
         if(document.querySelector(".error") === null){
 
             const amount = document.getElementById("el-id-2950-7").value;
-            const address = document.getElementById("el-id-2950-8").value;
+            const to = document.getElementById("el-id-2950-8").value;
+            const username = Cookies.get("username");
+            const from = Cookies.get(username+"_select_address");
 
             let confirmNodeParent = document.querySelector("webauthn-transaction").parentNode;
             confirmNodeParent.removeChild(document.querySelector("webauthn-transaction"));
             let confirmTitleNode = document.getElementById("title-confirm");
-            confirmTitleNode.insertAdjacentHTML("afterend", `<webauthn-transaction symbol=${symbol} amount=${amount} address=${address}></webauthn-transaction>`);
+            confirmTitleNode.insertAdjacentHTML("afterend", `<webauthn-transaction symbol=${symbol} amount=${amount} from=${from} to=${to}></webauthn-transaction>`);
             cancelEvent();
 
             document.getElementById("transaction-confirm").setAttribute("style", "z-index: 2012;");
