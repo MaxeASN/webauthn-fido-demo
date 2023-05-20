@@ -97,7 +97,13 @@ const username = document.getElementById("display-username").innerText;
 Cookies.set("username", username, { expires: 36500 })
 function disPlayAddress(){
     if(address && username){
-        let displayAddress = Cookies.get(username+"_select_address") || address;
+        let displayAddress;
+        if(Cookies.get(username+"_select_address")){
+            displayAddress = Cookies.get(username+"_select_address");
+        }else{
+            displayAddress = address;
+            Cookies.set(username+"_select_address", address, { expires: 36500 })
+        }
         displayAddress = displayAddress.substring(0, 6) + '...' + displayAddress.substring(37);
         document.querySelector("#display-address > span").innerText = displayAddress;
     }
