@@ -33,6 +33,7 @@ import org.springframework.cache.concurrent.ConcurrentMapCache;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 import org.web3j.protocol.Web3j;
 import org.web3j.protocol.core.methods.response.EthGetTransactionReceipt;
@@ -47,6 +48,7 @@ import java.util.concurrent.CompletableFuture;
 
 @RestController
 @RequestMapping("api/transaction")
+@CrossOrigin
 public class TransactionController {
     private static final Logger log = LoggerFactory.getLogger(TransactionController.class);
 
@@ -98,6 +100,10 @@ public class TransactionController {
             servletUtils.writeBadRequestToResponse(response, Map.of("message", "用户尚未登录"));
             return;
         }
+        JpaWebAuthnUser userEntity = webAuthnUserRepository.findByUsername(user.getUsername()).get();
+        if(!transactionService.verifyFromAddress(params.getFromAddress(), userEntity.getId())){
+            servletUtils.writeBadRequestToResponse(response, Map.of("message", "fromAddress有误"));
+        }
         AssertionStartRequest startRequest = new AssertionStartRequest();
         startRequest.setUsername(user.getUsername());
         WebAuthnAssertionStartStrategy assertionStartStrategy = new WebAuthnAssertionStartStrategy(relyingParty, operation);
@@ -115,6 +121,7 @@ public class TransactionController {
     }
 
     @RequestMapping("finish")
+    @Transactional
     public Object signResponse(@AuthenticationPrincipal UserDetails user,
                                             HttpServletRequest request) throws IOException{
         if(user == null){
@@ -152,7 +159,8 @@ public class TransactionController {
             return CommonResult.failed(e.getMessage());
         }
         //TODO:处理发送交易后可能会发生的报错
-        Transaction transaction = new Transaction(userEntity.getId(), "1", requestParams.getCoin(), wallet.getAddress(), requestParams.getToAddress(),
+        Long l1AddressId = transactionService.findL1AddressIdByAddress(requestParams.getFromAddress());
+        Transaction transaction = new Transaction(userEntity.getId(), "1", requestParams.getCoin(), l1AddressId, requestParams.getToAddress(),
                 requestParams.getAmount(), transactionHash);
         transactionRepo.save(transaction);
 
@@ -172,13 +180,9 @@ public class TransactionController {
         return CommonResult.success(CommonPage.restPage(transactionList));
     }
 
-//    @RequestMapping("test")
-//    public void test(){
-//        CompletableFuture<EthGetTransactionReceipt> receiptFuture1 = web3j.ethGetTransactionReceipt("0x645566b8ff3b12dd5ea8b3b5bd6f0fc3bd9e5f0b427c0508e3ba46c0c5c157a2").sendAsync();
-//        CompletableFuture<EthGetTransactionReceipt> receiptFuture2 = web3j.ethGetTransactionReceipt("0x645566b8ff3b12dd5ea8b3b5bd6f0fc3bd9e5f0b427c0508e3ba46c0c5c157a2").sendAsync();
-//        CompletableFuture.allOf(receiptFuture1, receiptFuture2).thenRun(()->{
-//            System.out.println(123);
-//        });
-//    }
+    @RequestMapping("test")
+    public String test(){
+        return "hello";
+    }
 
 }

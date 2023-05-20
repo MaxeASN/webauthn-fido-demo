@@ -9,4 +9,9 @@ public interface TransactionService {
 
     List<Transaction> findAllByAppUserId(long appUserId, int pageNum, int pageSize);
 
+    Long findL1AddressIdByAddress(String fromAddress);
+
+    //验证fromAddress是否是用户的l1地址
+    boolean verifyFromAddress(String fromAddress, Long userId);
+
 }

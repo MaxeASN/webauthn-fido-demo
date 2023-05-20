@@ -25,7 +25,8 @@ public class Transaction {
 
     private Integer coin;
 
-    private String fromAddress;
+    @Column(name = "l1_address_id")
+    private Long l1AddressId;
 
     private String toAddress;
 
@@ -39,11 +40,11 @@ public class Transaction {
 
     private LocalDateTime updateTime;
 
-    public Transaction(Long appUserId, String chainId, Integer coin, String fromAddress, String toAddress, BigDecimal amount, String hash) {
+    public Transaction(Long appUserId, String chainId, Integer coin, Long l1AddressId, String toAddress, BigDecimal amount, String hash) {
         this.appUserId = appUserId;
         this.chainId = chainId;
         this.coin = coin;
-        this.fromAddress = fromAddress;
+        this.l1AddressId = l1AddressId;
         this.toAddress = toAddress;
         this.amount = amount;
         this.hash = hash;

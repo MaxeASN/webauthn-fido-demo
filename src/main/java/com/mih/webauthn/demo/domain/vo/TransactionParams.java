@@ -8,6 +8,8 @@ import java.math.BigDecimal;
 public class TransactionParams {
     private int coin;
 
+    private String fromAddress;
+
     private String toAddress;
 
     private BigDecimal amount;
