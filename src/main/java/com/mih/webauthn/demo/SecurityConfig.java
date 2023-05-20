@@ -37,7 +37,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
     @Override
     public void configure(WebSecurity web) throws Exception {
-        web.ignoring().antMatchers("/index.html", "/login.html","/home.html","/logout","/send",
+        web.ignoring().antMatchers("/index.html", "/login.html","/home.html",
                 "/h2-console/**",
                 "/register.html", "/recovery.html", "/node_modules/**", "/error", "/transaction.html", "/transactionInfo.html",
                 "/static/**", "/js/**", "/css/**", "/cdn-cgi/**", "/fonts/**", "/img/**", "/*.js", "/*.wasm", "/register");
@@ -87,6 +87,12 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                                         return webAuthnUserRepository.save(newUser);
                                     });
                         })
-                );
+                )
+                .and()
+                .logout()
+                .logoutUrl("/logout")
+                .logoutSuccessUrl("/login.html")
+                .invalidateHttpSession(true)
+                .deleteCookies("JSESSIONID");
     }
 }

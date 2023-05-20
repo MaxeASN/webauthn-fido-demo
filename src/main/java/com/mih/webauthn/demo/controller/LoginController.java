@@ -23,6 +23,7 @@ import java.util.Optional;
 
 //@RestController
 //@RequestMapping("api/diyLogin")
+//@CrossOrigin
 public class LoginController {
 
 //    @Autowired

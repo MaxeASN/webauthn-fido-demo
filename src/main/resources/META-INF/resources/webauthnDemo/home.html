@@ -115,7 +115,7 @@
                             <div class="setting-icons" data-display="false">
                                 <iconpark-icon icon-id="ETH" id="setting-coin-icon" class="iconpark icon-ETH setting" name="" size="1em" width="" height=""></iconpark-icon>
                                 <a href="/logout" class="setting">
-                                    <iconpark-icon icon-id="exit" class="iconpark icon-exit" name="" size="1em" width="" height=""></iconpark-icon>
+                                    <iconpark-icon icon-id="exit" class="iconpark icon-exit" name="" size="1em" width="" height="" title="登出"></iconpark-icon>
                                 </a>
                             </div>
                         </div>
@@ -429,7 +429,7 @@
                 coinMenu.insertAdjacentHTML('afterend', newDevHtml);
                 document.querySelector(".up-home-page-header").classList.add("up-home-page-header-bg");
 
-                document.getElementById("ETH").addEventListener("click", showCoinMenu);
+                document.getElementById("chain-ETH").addEventListener("click", showCoinMenu);
             } else {
                 setIcon.setAttribute("data-display", "false");
                 let e1 = document.getElementById("cover-chain-select");
