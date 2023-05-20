@@ -178,19 +178,19 @@ class e extends HTMLElement {
             const e = new FormData(t.target).get(this.inputName), i = await fetch(this.registrationStartUrl, {
                 ...this.fetchOptions,
                 body: JSON.stringify({username: e})
-            }), {status: r, registrationId: n, publicKeyCredentialCreationOptions: s} = await i.json();
-            if (!i.ok) throw new Error(r || "Could not successfuly start registration");
+            }), {status: r, registrationId: n, publicKeyCredentialCreationOptions: s, message: m1} = await i.json();
+            if (!i.ok) throw new Error(m1 || "Could not successfuly start registration");
             const o = await this._getPublicKeyCredentialCreateOptionsDecoder(),
                 a = await navigator.credentials.create({publicKey: o(s)});
             this.dispatchEvent(new CustomEvent("registration-created"));
             const u = await this._getRegisterCredentialEncoder(), l = await fetch(this.registrationFinishUrl, {
                 ...this.fetchOptions,
                 body: JSON.stringify({registrationId: n, credential: u(a), userAgent: window.navigator.userAgent})
-            });
-            if (!l.ok) throw new Error("Could not successfuly complete registration");
-            const c = await l.json();
+            }), c = await l.json();
+            if (!l.ok) throw new Error(c.message || "Could not successfuly complete registration");
             this.dispatchEvent(new CustomEvent("registration-finished", {detail: c}))
         } catch (t) {
+            alert(t.message);
             this.dispatchEvent(new CustomEvent("registration-error", {detail: {message: t.message}}))
         }
     }
