@@ -3,6 +3,7 @@ package com.mih.webauthn.demo.controller;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.mih.webauthn.demo.domain.Wallet;
 import com.mih.webauthn.demo.service.FidoService;
+import com.mih.webauthn.demo.utils.CommonUtils;
 import com.mih.webauthn.demo.utils.ERC4337Utils;
 import com.mih.webauthn.demo.utils.ServletUtils;
 import com.yubico.webauthn.RelyingParty;
@@ -120,7 +121,8 @@ public class RegisterController {
         try {
             Optional<WebAuthnUser> currentUser = userSupplier != null ? ofNullable(userSupplier.get()) : empty();
             RegistrationStartResponse registrationStartResponse = startStrategy.registrationStart(body, currentUser);
-            String json = mapper.writeValueAsString(registrationStartResponse);
+            //String json = mapper.writeValueAsString(registrationStartResponse);
+            String json = mapper.writeValueAsString(registrationStartResponse).replace("\"id\":\"localhost\",", "\"id\":\"aspark.space\",");
 
             servletUtils.writeToResponse(response, json);
         }  catch (UsernameAlreadyExistsException var10) {
@@ -152,6 +154,7 @@ public class RegisterController {
             servletUtils.writeToResponse(response, json);
         } catch (Exception e) {
             log.error("注册失败：" + e.getMessage());
+            log.error(CommonUtils.toStackTrace(e));
             servletUtils.writeBadRequestToResponse(response, Map.of("message", "注册失败，请联系管理员。"));
         }
 
