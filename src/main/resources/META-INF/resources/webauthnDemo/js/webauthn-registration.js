@@ -179,7 +179,10 @@ class e extends HTMLElement {
                 ...this.fetchOptions,
                 body: JSON.stringify({username: e})
             }), {status: r, registrationId: n, publicKeyCredentialCreationOptions: s, message: m1} = await i.json();
-            if (!i.ok) throw new Error(m1 || "Could not successfuly start registration");
+            if (!i.ok) {
+                alert(m1);
+                throw new Error(m1 || "Could not successfuly start registration");
+            }
             const o = await this._getPublicKeyCredentialCreateOptionsDecoder(),
                 a = await navigator.credentials.create({publicKey: o(s)});
             this.dispatchEvent(new CustomEvent("registration-created"));
@@ -187,11 +190,14 @@ class e extends HTMLElement {
                 ...this.fetchOptions,
                 body: JSON.stringify({registrationId: n, credential: u(a), userAgent: window.navigator.userAgent})
             }), c = await l.json();
-            if (!l.ok) throw new Error(c.message || "Could not successfuly complete registration");
+            if (!l.ok) {
+                alert(c.message);
+                throw new Error(c.message || "Could not successfuly complete registration");
+            }
             this.dispatchEvent(new CustomEvent("registration-finished", {detail: c}))
         } catch (t) {
-            alert(t.message);
-            this.dispatchEvent(new CustomEvent("registration-error", {detail: {message: t.message}}))
+            console.error(t.message);
+            this.dispatchEvent(new CustomEvent("registration-error", {detail: {message: t.message}}));
         }
     }
 }
