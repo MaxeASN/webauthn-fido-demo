@@ -12,3 +12,11 @@
     border-radius: 30px;
     cursor: pointer;
 }
+
+#receive-dialog .transaction-details-pairs {
+    display: flex;
+    justify-content: space-between;
+    width: 100%;
+    margin-bottom: 10px;
+    margin-top: 10px;
+}
