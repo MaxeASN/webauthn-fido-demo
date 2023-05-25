@@ -251,3 +251,35 @@ function updateDisplayAddress(event) {
     displayL1Address();
     disPlayAddress();
 }
+
+function displayCreateAddressConfirm(){
+    let confirmDiv = document.getElementById("create-address-confirm");
+    confirmDiv.style.display = "";
+}
+
+function hideCreateAddressConfirm(){
+    let confirmDiv = document.getElementById("create-address-confirm");
+    confirmDiv.style.display = "none";
+}
+
+function createL1Address(){
+    fetch(ADD_L1ADDRESS)
+        .then(response=> response.json())
+        .then(({ code: c, message: m, data: d }) => [c, m, d])
+        .then(([code, message, data]) => {
+            if(code != 1) {
+                alert(message);
+                throw new Error(message);
+            }
+            alert("创建成功");
+            hideCreateAddressConfirm();
+            updateL1Address();
+        })
+        .catch(error => console.error(error));
+
+}
+
+function closeTransactionDetails(){
+    let transactionOverlay = document.querySelector(".el-overlay.transaction-details");
+    transactionOverlay.style.display = "none";
+}
