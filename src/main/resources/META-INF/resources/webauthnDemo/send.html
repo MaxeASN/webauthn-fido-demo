@@ -33,9 +33,9 @@
     <title>MaxeLabs</title>
 <!--    <script defer="defer" src="/js/chunk-vendors.4027e50b.js" type="text/javascript"></script>-->
 <!--    <script defer="defer" src="/js/app.6cf805e6.js" type="text/javascript"></script>-->
-    <link href="/css/chunk-vendors.610733ae.css" rel="stylesheet">
-    <link href="/css/send.css" rel="stylesheet">
-    <link href="/css/app.f705e97f.css" rel="stylesheet">
+    <link href="./css/chunk-vendors.610733ae.css" rel="stylesheet">
+    <link href="./css/send.css" rel="stylesheet">
+    <link href="./css/app.f705e97f.css" rel="stylesheet">
     <link rel="icon" type="image/svg+xml" href="/img/icons/favicon.svg">
     <link rel="icon" type="image/png" sizes="32x32" href="/img/icons/favicon-32x32.png">
     <link rel="icon" type="image/png" sizes="16x16" href="/img/icons/favicon-16x16.png">
@@ -57,9 +57,16 @@
     <link href="https://www.googletagmanager.com" rel="preconnect">
 <!--    <script async="" src="https://www.googletagmanager.com/gtag/js?id=G-HNDL91TELQ&amp;l=dataLayer" charset="utf-8"></script>-->
 <!--    <script recaptcha-v3-script="" src="https://www.google.com/recaptcha/api.js?render=explicit"></script>-->
-    <link rel="stylesheet" type="text/css" href="/css/6592.acb1dd5a.css">
+    <link rel="stylesheet" type="text/css" href="./css/6592.acb1dd5a.css">
     <script type="module" src="js/webauthn-transaction.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/js-cookie@3.0.0/dist/js.cookie.min.js"></script>
+    <style>
+        body {
+            background-image: url("img/background.jpg");
+            background-repeat: no-repeat;
+            background-size: cover;
+        }
+    </style>
 </head>
 <body class="">
 <noscript>
@@ -78,19 +85,19 @@
             </div>
             <div class="tx-tip">发送交易中，请耐心等待…</div>
         </div>
-        <div id="page-send" class="page-sign page">
+        <div id="page-send" class="page-sign page" style="border: 1px solid #424b79; background-color: rgb(12 10 27 / 75%);">
             <div class="up-header">
                 <div class="left" onclick="window.location.href='/home'">
                     <!---->
-                    <iconpark-icon icon-id="back" class="iconpark icon-back" name="" size="1em" width="" height=""></iconpark-icon>
-                    <div class="title">发送</div>
+                    <iconpark-icon icon-id="back" class="iconpark icon-back" name="" size="1em" width="" height="" style="color: white"></iconpark-icon>
+                    <div class="title" style="color: white">Send</div>
                 </div>
                 <div class="right">
                     <!---->
                 </div>
             </div>
             <form class="el-form el-form--default el-form--label-right send-form">
-                <div class="label">发送资产</div>
+                <div class="label" style="color: white">Send Assets</div>
                 <div class="token">
                     <div class="up-token index">
                         <div class="token-box">
@@ -99,7 +106,7 @@
                         </div>
                         <div class="index">
                             <div class="index-title">undefined</div>
-                            <div class="index-subtitle">余额 undefined undefined</div>
+                            <div class="index-subtitle" style="color: white">balance undefined undefined</div>
                         </div>
                     </div>
                     <div class="el-form-item is-required asterisk-left amount up-form-item amount">
@@ -143,7 +150,7 @@
                         </div>
                     </div>
                 </div>
-                <div class="label">发送至</div>
+                <div class="label" style="color: white">To</div>
                 <div class="el-form-item is-required asterisk-left to-address up-form-item to-address">
                     <!--v-if-->
                     <div class="el-form-item__content" id="address-input">
@@ -162,7 +169,7 @@
                                             <!--v-if-->
 										</span>
 									</span>
-                                <input class="el-input__inner" modelmodifiers="[object Object]" spellcheck="false" type="text" autocomplete="off" tabindex="0" placeholder="地址 (0x)" required id="el-id-2950-8"><!-- suffix slot -->
+                                <input class="el-input__inner" modelmodifiers="[object Object]" spellcheck="false" type="text" autocomplete="off" tabindex="0" placeholder="address (0x)" required id="el-id-2950-8"><!-- suffix slot -->
                                 <span class="el-input__suffix">
 										<span class="el-input__suffix-inner">
 											<iconpark-icon icon-id="loading" class="iconpark icon-loading is-loading" style="display: none;" name="" size="1em" width="" height=""></iconpark-icon>
@@ -179,15 +186,15 @@
                         <!--v-if-->
                     </div>
                 </div>
-                <div class="tips">
-                    <iconpark-icon icon-id="exclamation-point" class="iconpark icon-exclamation-point icon" name="" size="1em" width="" height=""></iconpark-icon>
-                    <span>请确保收款地址不是交易所的充值地址</span>
-                    <div class="full-tips">交易所暂不支持来自合约钱包的原生代币充值，您有可能因此丢失充值的资产</div>
-                </div>
+<!--                <div class="tips">-->
+<!--                    <iconpark-icon icon-id="exclamation-point" class="iconpark icon-exclamation-point icon" name="" size="1em" width="" height=""></iconpark-icon>-->
+<!--                    <span>请确保收款地址不是交易所的充值地址</span>-->
+<!--                    <div class="full-tips">交易所暂不支持来自合约钱包的原生代币充值，您有可能因此丢失充值的资产</div>-->
+<!--                </div>-->
                 <!---->
                 <button class="el-button el-button--primary submit up-button submit" aria-disabled="false" id="next-step-button" type="button">
                     <!--v-if-->
-                    <span class="">下一步</span>
+                    <span class="">Next Step</span>
                 </button>
             </form>
         </div>
@@ -218,7 +225,7 @@
     </div>
     <div class="el-overlay" id="transaction-confirm" style="z-index: 2012; display: none">
         <div role="dialog" aria-modal="true" aria-labelledby="el-id-3005-6" aria-describedby="el-id-3005-7" class="el-overlay-dialog">
-            <div class="el-dialog el-dialog--center drawer-receive-dialog" tabindex="-1">
+            <div class="el-dialog el-dialog--center drawer-receive-dialog" tabindex="-1" style="background-color: rgb(62 56 106);">
                 <header class="el-dialog__header">
                     <span role="heading" class="el-dialog__title"></span>
                     <!--v-if-->
@@ -227,7 +234,7 @@
                     <div>
                         <div id="receive-dialog" data-v-7bb2b20a="">
                             <div class="title" id="title-confirm" data-v-7bb2b20a="" style="display: flex; justify-content: center">
-                                <span data-v-7bb2b20a="" style="font-weight: bolder;font-size: 1.2em;">确认交易</span>
+                                <span data-v-7bb2b20a="" style="font-weight: bolder;font-size: 1.2em;color: white;">Confirm Transaction</span>
                             </div>
 <!--                            <div class="amount-confirm-text">转账金额</div>-->
 <!--                            <div class="amount" id="amount-confirm" data-v-7bb2b20a="">1</div>-->
@@ -252,14 +259,16 @@
     </div>
     <!---->
 </div>
-<script src="/iconpark.329803f7.js" type="text/javascript"></script>
+<script src="./iconpark.329803f7.js" type="text/javascript"></script>
 <!--<script defer="" src="https://static.cloudflareinsights.com/beacon.min.js/v52afc6f149f6479b8c77fa569edb01181681764108816" integrity="sha512-jGCTpDpBAYDGNYR5ztKt4BQPGef1P0giN6ZGVUi835kFF88FOmmn8jBQWNgrNd8g/Yu421NdgWhwQoaOPFflDw==" data-cf-beacon="{&quot;rayId&quot;:&quot;7bd44b2c69bf2106&quot;,&quot;version&quot;:&quot;2023.3.0&quot;,&quot;b&quot;:1,&quot;token&quot;:&quot;9a691607f17b42529e0ce092631c5f51&quot;,&quot;si&quot;:100}" crossorigin="anonymous"></script>-->
 <script type="text/javascript">
     const urlParams = new URLSearchParams(window.location.search);
     const symbol = urlParams.get('symbol');
+    let indexTitle =  document.querySelector(".index-title");
+    indexTitle.style.color = "white";
 
     if(symbol === "ETH" || symbol === "USDT" || symbol === "USDC"){
-        document.querySelector(".index-title").innerHTML = symbol;
+        indexTitle.innerHTML = symbol;
         let icons = document.getElementsByTagName("iconpark-icon");
         icons[1].setAttribute("icon-id", symbol);
         icons[1].className = "iconpark icon-" + symbol + " box-token";

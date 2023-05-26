@@ -325,8 +325,10 @@ html .el-dialog.up-confirm .el-dialog__subtitle {
     min-height: 100vh;
     padding: 24px;
     text-align: center;
-    background-color: var(--up-background);
-    position: relative
+    /*background-color: var(--up-background);*/
+    background-color: rgb(12 10 27 / 75%);
+    position: relative;
+    border: 1px solid #424b79;
 }
 
 .up-app>.under-construction {

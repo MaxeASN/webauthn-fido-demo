@@ -53,6 +53,7 @@ class e extends HTMLElement {
             top: 30px;
         }
         input#el-id-6606-8 {
+            border: 1px solid #4d29a7;
             height: 60;
             padding: 1 16;
             background-color: rgb(249, 249, 249);
@@ -63,7 +64,7 @@ class e extends HTMLElement {
         button#submit-btn {
             position: relative;
             top: 20;
-            background-color: #9a7cff;
+            background-color: #522dd1;
             height: 50;
             width: 90%;
             border-radius: 12px;
@@ -73,6 +74,10 @@ class e extends HTMLElement {
             font-weight: bold;
             color: #fff;
             cursor: pointer;
+        }
+        
+        button#submit-btn:hover {
+            background-color: #7151e0;
         }
         
         </style>
@@ -95,7 +100,7 @@ class e extends HTMLElement {
 \t\t\t\t\t\t\t\t\t\t\t\t\t<!--v-if-->
 \t\t\t\t\t\t\t\t\t\t\t\t</span>
 \t\t\t\t\t\t\t\t\t\t\t</span>
-\t\t\t\t\t\t\t\t\t\t\t<input class="el-input__inner" autofocus="" type="text" autocomplete="off" tabindex="0" placeholder="请输入用户名" id="el-id-6606-8" name = "username"><!-- suffix slot -->
+\t\t\t\t\t\t\t\t\t\t\t<input class="el-input__inner" autofocus="" type="text" autocomplete="off" tabindex="0" placeholder="username" id="el-id-6606-8" name = "username"><!-- suffix slot -->
 \t\t\t\t\t\t\t\t\t\t\t<!--v-if-->
 \t\t\t\t\t\t\t\t\t\t</div><!-- append slot -->
 \t\t\t\t\t\t\t\t\t\t<!--v-if-->
@@ -105,7 +110,7 @@ class e extends HTMLElement {
 \t\t\t\t\t\t\t</div>
 \t\t\t\t\t\t\t<button class="el-button el-button--primary submit up-button submit" aria-disabled="false" type="submit" id="submit-btn">
 \t\t\t\t\t\t\t\t<!--v-if-->
-\t\t\t\t\t\t\t\t<span class="">登录</span>
+\t\t\t\t\t\t\t\t<span class="">Login</span>
 \t\t\t\t\t\t\t</button>
 \t\t\t\t\t\t</form>
             `
