@@ -8,13 +8,13 @@
     font-size: 12px;
     line-height: 20px;
     color: var(--up-text-secondary);
-    display: none;
+    /*display: none;*/
     align-items: center;
     justify-content: center;
 }
 .up-supported-by .unipass-logo {
-    width: 20px;
-    height: 20px;
+    width: 100px;
+    height: 16px;
     margin: 0 8px;
 }
 .up-supported-by .text {
