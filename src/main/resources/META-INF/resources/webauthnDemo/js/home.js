@@ -10,7 +10,7 @@ ethCoin.addEventListener('click', event => {
             newDiv.classList.add("bottom");
             newDiv.innerHTML = `
         <button class="el-button el-button--primary up-button" aria-disabled="false" type="button" onclick="window.location.href='/send?symbol=ETH&chain=eth'"><!--v-if-->
-            <span class="">发送</span>
+            <span class="">SEND</span>
         </button>
     `;
             ethCoin.appendChild(newDiv)
@@ -28,7 +28,7 @@ usdtCoin.addEventListener('click', event => {
             newDiv.classList.add("bottom");
             newDiv.innerHTML = `
             <button class="el-button el-button--primary up-button" aria-disabled="false" type="button" onclick="window.location.href='/send?symbol=USDT&chain=eth'"><!--v-if-->
-                <span class="">发送</span>
+                <span class="">SEND</span>
             </button>
         `;
             usdtCoin.appendChild(newDiv)
@@ -45,7 +45,7 @@ usdcCoin.addEventListener('click', event => {
             newDiv.classList.add("bottom");
             newDiv.innerHTML = `
             <button class="el-button el-button--primary up-button" aria-disabled="false" type="button" onclick="window.location.href='/send?symbol=USDC&chain=eth'"><!--v-if-->
-                <span class="">发送</span>
+                <span class="">SEND</span>
             </button>
         `;
             usdcCoin.appendChild(newDiv)
@@ -65,7 +65,7 @@ let intervalId;
 transactionRecordTab.addEventListener('click', function (){
     tokenTab.className = "el-tabs__item is-top";
     transactionRecordTab.classList.add("is-active");
-    activeBar.style.width = '40px';
+    activeBar.style.width = '70px';
     activeBar.style.transform = 'translateX(132px)';
     transactionRecordPane.setAttribute("aria-hidden", "false");
     transactionRecordPane.setAttribute("style", "overflow-y: auto; height: 300px;");
@@ -81,7 +81,7 @@ transactionRecordTab.addEventListener('click', function (){
 tokenTab.addEventListener('click', function (){
     transactionRecordTab.className = "el-tabs__item is-top";
     tokenTab.classList.add("is-active");
-    activeBar.style.width = '107px';
+    activeBar.style.width = '70px';
     activeBar.style.transform = 'translateX(0px)';
     tokenPane.setAttribute("aria-hidden", "false");
     tokenPane.setAttribute("style", "");

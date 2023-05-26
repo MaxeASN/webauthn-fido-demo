@@ -1260,7 +1260,7 @@
   width: 100%;
   border-bottom: 1px solid #46454a;
   border-radius: 0 0 20px 20px;
-  background-color: var(--up-header-bg);
+  background-color: var(--up-background);
 }
 @media screen and (min-width: 480px) {
   .up-home-page-header {
@@ -1273,7 +1273,7 @@
   }
 }
 .up-home-page-header-bg {
-  background-color: var(--up-header-bg);
+  background-color: var(--up-background);
 }
 #page-index .main-container {
   position: relative;
@@ -1400,22 +1400,23 @@
   margin-left: 40px;
 }
 #page-index .shortcut .btn-box .btn {
-  width: 68px;
-  height: 68px;
+  width: 115px;
+  height: 30px;
   background: var(--up-bg);
-  box-shadow: inset 1px 1px 3px 0 var(--up-line);
+  /* box-shadow: inset 1px 1px 3px 0 var(--up-line); */
   border-radius: 30px;
   margin-bottom: 15px;
   display: flex;
   justify-content: center;
   align-items: center;
+  border: 1px solid;
 }
 #page-index .shortcut .btn-box .btn .iconpark {
   font-size: 30px;
 }
 #page-index .shortcut .btn-box.active .btn {
-  background: linear-gradient(320deg, #8864ff, #9a7cff);
-  box-shadow: inset 1px 1px 4px 0 hsla(0, 0%, 100%, 0.5);
+  /* background: linear-gradient(320deg, #8864ff, #9a7cff); */
+  /* box-shadow: inset 1px 1px 4px 0 hsla(0, 0%, 100%, 0.5); */
 }
 #page-index .recovering {
   margin-top: 24px;
@@ -1459,6 +1460,7 @@
   border-radius: 12px;
   -webkit-backdrop-filter: blur(8px);
   backdrop-filter: blur(8px);
+  border: 1px solid var(--up-text-primary);
 }
 #page-index .coin-box .coin + .coin {
   margin-top: 20px;

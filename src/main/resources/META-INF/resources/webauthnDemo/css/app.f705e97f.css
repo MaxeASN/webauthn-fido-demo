@@ -336,16 +336,16 @@ html .el-dialog.up-confirm .el-dialog__subtitle {
   --up-primary: #8864ff;
   --up-secondary: #ad94ff;
   --up-third: #acf080;
-  --up-background: #fff;
+  --up-background: rgba(0,0,0,0.6);
   --up-app-background: #f5f5f5;
-  --up-text-primary: #1f202a;
-  --up-text-secondary: #5e5f6e;
-  --up-text-third: #97989d;
+  --up-text-primary: #fff;
+  --up-text-secondary: hsla(0, 0%, 100%, 0.8);
+  --up-text-third: hsla(0, 0%, 100%, 0.6);
   --up-red: #d44b4b;
   --up-green: #4aac4c;
   --up-orange: #ff984f;
   --up-pink: #ebdfdf;
-  --up-bg: #f9f9f9;
+  --up-bg: rgba(0,0,0,0.7);
   --up-bg-solid: #f4f4f4;
   --up-bg-checked: #f7f7f7;
   --up-text: #c1c1c1;
@@ -731,15 +731,18 @@ html .up-button {
   border: none;
 }
 html .up-button.el-button--primary {
-  background: linear-gradient(320deg, var(--up-primary) 0, #9a7cff 100%);
-  box-shadow: inset 1px 1px 4px 0 hsla(0, 0%, 100%, 0.5);
+  /* background: linear-gradient(320deg, var(--up-primary) 0, #9a7cff 100%); */
+  background-color: rgb(63, 126, 252);
+  /* box-shadow: inset 1px 1px 4px 0 hsla(0, 0%, 100%, 0.5); */
 }
 html .up-button.el-button--primary:hover {
-  background: linear-gradient(320deg, #6d4fcd, #8079ce);
+  /* background: linear-gradient(320deg, #6d4fcd, #8079ce); */
+  background-color: rgb(128, 167, 245);
 }
 html .up-button.el-button--primary.is-disabled {
-  background: linear-gradient(320deg, var(--up-primary) 0, #9a7cff 100%);
-  box-shadow: inset 1px 1px 4px 0 hsla(0, 0%, 100%, 0.5);
+  /* background: linear-gradient(320deg, var(--up-primary) 0, #9a7cff 100%); */
+  background-color: gray;
+  /* box-shadow: inset 1px 1px 4px 0 hsla(0, 0%, 100%, 0.5); */
   border-radius: 12px;
   opacity: 0.4;
 }

@@ -80,7 +80,32 @@
     </noscript>
     <div id="app" data-v-app="">
         <!---->
-        <div class="up-app">
+        <div class="up-app" style="display: flex; flex-wrap: wrap;  justify-content: center; align-items: flex-start;">
+            <div class="user-container">
+                <div class="user-basic-info">
+                    <div class="user-nickname">
+
+                        <div class="user-font">
+                            My Nickname : 
+                        </div>
+                        <div class="user-font" id="nickname" style="font-weight: bold;left: 5px;">
+                            My Nickname 
+                        </div>
+                    </div>
+
+                    <div class="user-fido-id">                  
+                        <div class="user-font">
+                            My FIDO ID : 
+                        </div>
+                        <div class="user-font" id="fidoid" style="font-weight: bold;left: 5px;">
+                            0xABCXxxxxxxxxxxXXXXXXXXXXXXXXXX
+                        </div>
+                    </div>
+                    <div class="user-icon">
+                    </div>    
+                </div>
+            
+            </div>
             <div class="up-loading" style="display: none;">
                 <div class="loader">
                     <div class="orbe" style="--index:0;"></div>
@@ -91,8 +116,32 @@
                 </div>
                 <div class="tx-tip">发送交易中，请耐心等待…</div>
             </div>
-            <div id="page-index" class="header-bg-img page">
-                <div class="main-container">
+            <div id="page-index" class="header-bg-img page" style="border: 1px solid rgb(62,70,115);top: 100px;min-height: 700px;   
+            margin-bottom: 0px; margin:15px;">
+                <div class="main-container" style="display: flex; flex-wrap: wrap;justify-content: flex-start; align-items: center;align-content: flex-start;
+                padding-top: 15px;height: 600PX;">
+                    <div class="dapp-icon" style="background-image:url(./img/icons/dapp1.png);background-size: cover;"></div>
+                    <div class="dapp-icon" style="background-image:url(./img/icons/dapp2.png);background-size: cover;"></div>
+                    <div class="dapp-icon" style="background-image:url(./img/icons/dapp3.png);background-size: cover;"></div>
+                    <div class="dapp-icon" style="background-image:url(./img/icons/dapp4.png);background-size: cover;"></div>
+                    <div class="dapp-icon" style="background-image:url(./img/icons/dapp5.png);background-size: cover;"></div>
+                    <div class="dapp-icon" style="background-image:url(./img/icons/dapp6.png);background-size: cover;"></div>
+                    <div class="dapp-icon" style="background-image:url(./img/icons/dapp7.png);background-size: cover;"></div>
+                    <div class="dapp-icon" style="background-image:url(./img/icons/dapp8.png);background-size: cover;"></div>
+                    <div class="dapp-icon" style="background-image:url(./img/icons/dapp9.png);background-size: cover;"></div>
+                    <div class="dapp-icon" style="background-image:url(./img/icons/dapp10.png);background-size: cover;"></div>
+                    <div class="dapp-icon" style="background-image:url(./img/icons/dapp11.png);background-size: cover;border: 2px dashed;"></div>
+                    <div style="position:absolute;margin-bottom: 0px;bottom: -60px; align-items: center;width: 396;font-family: myFont;font-size: large;">
+                    My DApps
+                     </div>
+                </div>
+
+
+            </div>
+
+            <div id="page-index" class="header-bg-img page" style="border: 1px solid rgb(62,70,115);top: 100px;min-height: 700px;   
+            margin-bottom: 10px; margin:15px;">
+                <div class="main-container" style="margin-bottom:50px ;">
                     <div class="up-home-page-header">
                         <div class="header-content">
                             <div class="user">
@@ -105,15 +154,15 @@
                                         <img src="img/switch.svg" style="margin-left: 6px" id="switch-address" title="切换地址" onclick="displayL1Address()">
                                     </div>
                                 </div>
-                                <div class="cover" style="height: 710px; display: none;" id="cover-address-select"></div>
+                                <div class="cover" style="height: 610px; display: none;" id="cover-address-select"></div>
                                 <div class="chain-select-container address-options" style="display: none">
                                     <div class="chain-select-options chain-options" style="border-bottom: 1px solid #c3c3c3;">
                                         <div class="button-box button-box-padding" style="margin-bottom: 20px; margin-left: 46px;">
-                                            <button class="el-button el-button--info up-button" id="create-l1-address" onclick="displayCreateAddressConfirm()" aria-disabled="false" type="button" style="width: 180px;margin-right: 10px;">
-                                                <span class=""><iconpark-icon icon-id="add-token" class="iconpark icon-add-token" name="" size="1em" width="" height=""></iconpark-icon> 创建地址</span>
+                                            <button class="el-button el-button--info up-button" id="create-l1-address" onclick="displayCreateAddressConfirm()" aria-disabled="false" type="button" style="width: 180px;margin-right: 10px;color: #548bdd;">
+                                                <span class=""><iconpark-icon icon-id="add-token" class="iconpark icon-add-token" name="" size="1em" width="" height=""></iconpark-icon> Create Address</span>
                                             </button>
-                                            <button class="el-button el-button--info up-button" id="import-l1-address" aria-disabled="false" type="button" style="width: 180px;">
-                                                <span class=""><img src="img/import.svg" style="width: 22px;height: 22px;"> 导入地址</span>
+                                            <button class="el-button el-button--info up-button" id="import-l1-address" aria-disabled="false" type="button" style="width: 180px;color: #548bdd;">
+                                                <span class=""><img src="img/import.svg" style="width: 22px;height: 22px;"> Import Address</span>
                                             </button>
                                         </div>
                                     </div>
@@ -129,16 +178,16 @@
                                                 <div>
                                                     <div id="receive-dialog" data-v-7bb2b20a="">
                                                         <div class="title" id="title-confirm" data-v-7bb2b20a="" style="display: flex; justify-content: center">
-                                                            <span data-v-7bb2b20a="" style="font-weight: bolder;font-size: 1.1em;">创建地址</span>
+                                                            <span data-v-7bb2b20a="" style="font-weight: bolder;font-size: 1.1em;">Create Address</span>
                                                         </div>
-                                                        <div class="confirm-text" style="margin-top:30px"><span style="font-weight: bold; font-size:1.4em;">是否需要MaxeLabs帮你创建一个L1上的地址？</span></div>
+                                                        <div class="confirm-text" style="margin-top:30px"><span style="font-weight: bold; font-size:1.4em;">Do you need MaxeLabs to help you create an address on L1?</span></div>
 
                                                         <div id="confirm-button" style="margin-top: 0px;">
                                                             <button class="el-button el-button--primary copy up-button copy" onclick="createL1Address()" aria-disabled="false" type="button" data-v-7bb2b20a="" style="width: 100px;height: 46px;margin-right: 22px;/* margin-left: 0px; */">
-                                                                <span class="">确认</span>
+                                                                <span class="">Yes</span>
                                                             </button>
                                                             <button class="el-button el-button--primary copy up-button copy" onclick="hideCreateAddressConfirm()" aria-disabled="false" type="button" data-v-7bb2b20a="" style="width: 100px;height: 46px;background: linear-gradient(320deg, #bdb8d1 0, #bdb8d1 100%);">
-                                                                <span class="">取消</span>
+                                                                <span class="">No</span>
                                                             </button>
                                                         </div>
                                                         <webauthn-transaction></webauthn-transaction>
@@ -162,7 +211,7 @@
                     </div>
                     <!---->
                     <div class="lump-sum-box">
-                        <div class="title">layer2链余额</div>
+                        <div class="title" style="font-family:myFont;font-size: x-large;">Balance</div>
                         <div class="lump-sum">
                             <div class="worth">
                                 <span id="mainCoin_amount">$0.00</span>
@@ -171,7 +220,7 @@
                             <iconpark-icon icon-id="loading" class="iconpark icon-loading is-loading duration" style="display: none;" name="" size="1em" width="" height=""></iconpark-icon>
                         </div>
                     </div>
-                    <div class="shortcut">
+                    <div class="shortcut" style="margin-top:20px;">
 <!--                        <div class="btn-box">-->
 <!--                            <div class="btn">-->
 <!--                                <iconpark-icon icon-id="scan-light" class="iconpark icon-scan-light" name="" size="1em" width="" height=""></iconpark-icon>-->
@@ -180,21 +229,23 @@
 <!--                        </div>-->
                         <div class="btn-box active">
                             <div class="btn">
-                                <iconpark-icon icon-id="receive-dark" class="iconpark icon-receive-dark" name="" size="1em" width="" height=""></iconpark-icon>
+                                RECEIEVE
+                                <!-- <iconpark-icon icon-id="receive-dark" class="iconpark icon-receive-dark" name="" size="1em" width="" height=""></iconpark-icon> -->
 <!--                                <img src="img/transfer.svg" height="20" width="20">-->
                             </div>
-                            <div>接收</div>
+                            <!-- <div>接收</div> -->
                         </div>
                         <div class="btn-box" id="btn-box-buy">
                             <div class="btn" id="img-buy">
 <!--                                <iconpark-icon icon-id="buy-light" class="iconpark icon-buy-light" name="" size="1em" width="" height=""></iconpark-icon>-->
-                                <img src="img/buy.svg" height="30" width="30">
+                                <!-- <img src="img/buy.svg" height="30" width="30"> -->
+                                SEND
                             </div>
-                            <div id="text-buy">购买</div>
+                            <!-- <div id="text-buy">购买</div> -->
                         </div>
                     </div>
                     <!---->
-                    <div class="coin-box">
+                    <div class="coin-box" style="margin-top: 15px;">
                         <div class="el-tabs el-tabs--top">
                             <div class="el-tabs__header is-top">
                                 <!---->
@@ -202,11 +253,11 @@
                                     <!---->
                                     <div class="el-tabs__nav-scroll">
                                         <div class="el-tabs__nav is-top" role="tablist" style="transform: translateX(0px);">
-                                            <div class="el-tabs__active-bar is-top" style="width: 107px; transform: translateX(0px);"></div>
-                                            <div class="el-tabs__item is-top is-active" id="tab-token" aria-controls="pane-token" role="tab" aria-selected="true" tabindex="0">资产 & 转账
+                                            <div class="el-tabs__active-bar is-top" style="width: 69px; transform: translateX(0px);"></div>
+                                            <div class="el-tabs__item is-top is-active" id="tab-token" aria-controls="pane-token" role="tab" aria-selected="true" tabindex="0">ASSETS
                                                 <!---->
                                             </div>
-                                            <div class="el-tabs__item is-top" id="tab-collection" aria-controls="pane-collection" role="tab" aria-selected="false" tabindex="-1">交易
+                                            <div class="el-tabs__item is-top" id="tab-collection" aria-controls="pane-collection" role="tab" aria-selected="false" tabindex="-1">TRANSATIONS
                                                 <!---->
                                             </div>
                                         </div>
@@ -279,7 +330,7 @@
                                 </div>
                                 <div id="pane-collection" class="el-tab-pane" role="tabpanel" aria-hidden="true" aria-labelledby="tab-collection" style="display: none;">
                                     <iconpark-icon icon-id="loading" class="iconpark icon-loading collection-loading is-loading" name="" size="1em" width="" height="" style="display: none;"></iconpark-icon>
-                                    <div class="nft-none"><img src="./img/nft-none-light.7d2aa6bc.svg"><div>您还没有交易记录</div></div>
+                                    <div class="nft-none"><img src="./img/nft-none-light.7d2aa6bc.svg"><div>There are no transactions...</div></div>
                                     <div class="coin" style="display: none;">
                                         <div class="top">
                                             <div class="up-token index">
@@ -305,7 +356,11 @@
                             </div>
                         </div>
                     </div>
+                    <div style="position:absolute; margin-bottom: 0px; bottom: -60px; align-items: center;width: 396;font-family: myFont;font-size: large;">
+                        My Assets
+                    </div>
                 </div>
+
                 <div class="el-overlay" style="z-index: 2012; display: none;">
                     <div role="dialog" aria-modal="true" aria-labelledby="el-id-3005-6" aria-describedby="el-id-3005-7" class="el-overlay-dialog">
                         <div class="el-dialog el-dialog--center drawer-receive-dialog" tabindex="-1">
@@ -421,6 +476,31 @@
                     <div role="dialog" aria-modal="true" aria-label="扫码" aria-describedby="el-id-582-44" class="el-overlay-dialog"></div>
                 </div>
             </div>
+
+            <div id="page-index" class="header-bg-img page" style="border: 1px solid rgb(62,70,115);top: 100px;min-height: 700px;   
+            margin-bottom: 10px; margin:15px;">
+                <div class="main-container" style="display: flex; flex-wrap: wrap;justify-content: center; align-items: center;padding-top: 15px;height: 600px;">
+                    <div class="nft-icon"style="background-image:url(./img/icons/NFT1.png);background-size: cover;"></div>
+                    <div class="nft-icon"style="background-image:url(./img/icons/NFT2.png);background-size: cover;"></div>
+                    <div class="nft-icon"style="background-image:url(./img/icons/NFT3.png);background-size: cover;"></div>
+                    <div class="nft-icon"style="background-image:url(./img/icons/NFT4.png);background-size: cover;"></div>
+                    <div class="nft-icon"style="background-image:url(./img/icons/NFT5.png);background-size: cover;"></div>
+                    <div class="nft-icon"style="background-image:url(./img/icons/NFT6.png);background-size: cover;"></div>
+                    <div style="position:absolute; margin-bottom: 0px; bottom: -25px; align-items: center;width: 396;">
+                        More...
+                    </div>
+                    <div style="position:absolute; margin-bottom: 0px; bottom: -60px; align-items: center;width: 396;font-family: myFont;font-size: large;">
+                        My NFTs
+                    </div>
+                </div>
+                <!-- <div style="position:relative;top: 5px; align-items: center;width: 396;">
+                    MORE...
+                </div>
+                <div style="position:absolute;margin-bottom: 20px; bottom: 0px ;align-items: center;width: 396;font-family: myFont;font-size: large;">
+                    My NFTs
+                </div> -->
+            </div>
+
             <div class="el-overlay" style="z-index: 2001; display: none;">
                 <div role="dialog" aria-modal="true" aria-labelledby="el-id-582-0" aria-describedby="el-id-582-1" class="el-overlay-dialog"></div>
             </div>
@@ -482,9 +562,9 @@
             if(setIcon.getAttribute("data-display") === "false"){
                 setIcon.setAttribute("data-display", "true");
                 let newDevHtml = `
-                <div class="cover" style="height: 710px;" id="cover-chain-select"></div>
+                <div class="cover" style="height: 610px;" id="cover-chain-select"></div>
                 <div class="chain-select-container" id="chain-select-container">
-\t<div class="chain-select-options chain-options">
+\t<div class="chain-select-options chain-options" style="background-color: var(--up-background)">
 \t\t<div class="option" id="chain-ETH">
 \t\t\t<iconpark-icon icon-id="ETH" class="iconpark icon-ETH" name="" size="1em" width="24" height="24"></iconpark-icon>
 \t\t\t<div class="label">ETH</div>
