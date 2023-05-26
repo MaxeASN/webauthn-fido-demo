@@ -276,7 +276,8 @@
 #page-send .send-form .token {
   margin-top: 20px;
   padding: 20px;
-  background: var(--up-bg);
+  /*background: var(--up-bg);*/
+  background: rgb(45 38 90 / 75%);
   border-radius: 12px;
 }
 #page-send .send-form .token .amount {

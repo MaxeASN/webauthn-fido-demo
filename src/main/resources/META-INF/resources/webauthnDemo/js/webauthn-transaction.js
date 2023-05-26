@@ -56,15 +56,15 @@ class e extends HTMLElement {
     update() {
         this.root.innerHTML || (this.root.innerHTML =
             `
-            <div class="amount-confirm-text" style="font-weight: bolder;margin-top: 10px;margin-bottom: -10px;">转账金额：</div>
+            <div class="amount-confirm-text" style="font-weight: bolder;margin-top: 10px;margin-bottom: -10px;color: white">amount：</div>
             <div class="amount" id="amount-confirm" data-v-7bb2b20a="" style="margin-top: 20px;background: #f9f9f9;border-radius: 12px;padding: 10px 20px;font-size: 14px;font-weight: 400;color: #1f202a;line-height: 26px;">${this.amount} ${this.symbol}</div>
-            <div class="address-confirm-text" style="font-weight: bolder;margin-top: 10px;margin-bottom: -10px;">from：</div>
+            <div class="address-confirm-text" style="font-weight: bolder;margin-top: 10px;margin-bottom: -10px;color: white">from：</div>
             <div class="address" id="address-confirm" data-v-7bb2b20a="" style="margin-top: 20px;background: #f9f9f9;border-radius: 12px;padding: 10px 20px;font-size: 14px;font-weight: 400;color: #1f202a;line-height: 26px;">${this.from}</div>
-            <div class="address-confirm-text" style="font-weight: bolder;margin-top: 10px;margin-bottom: -10px;">to：</div>
+            <div class="address-confirm-text" style="font-weight: bolder;margin-top: 10px;margin-bottom: -10px;color: white">to：</div>
             <div class="address" id="address-confirm" data-v-7bb2b20a="" style="margin-top: 20px;background: #f9f9f9;border-radius: 12px;padding: 10px 20px;font-size: 14px;font-weight: 400;color: #1f202a;line-height: 26px;">${this.to}</div>
             <div class="tips" style="margin-top: 10px;">
                 <iconpark-icon icon-id="exclamation-point" class="iconpark icon-exclamation-point icon" name="" size="1em" width="" height=""></iconpark-icon>
-                <span style="color: var(--up-primary);font-weight: 500;font-size: 14px;line-height: 20px;">请核对以上信息是否有误</span>
+                <span style="color: var(--up-primary);font-weight: 500;font-size: 14px;line-height: 20px;">please check whether the above <br>information is correct</span>
             </div>
             <div id="confirm-button" style="margin-top: 20px;">
                 <button class="el-button el-button--primary copy up-button copy" id="confirm-button-yes" aria-disabled="false" type="button" data-v-7bb2b20a="" style="
@@ -79,7 +79,7 @@ class e extends HTMLElement {
                 border: none;
                 background: linear-gradient(320deg, #8864ff 0, #9a7cff 100%);
                 box-shadow: inset 1px 1px 4px 0 hsla(0, 0%, 100%, 0.5)">
-                    <span class="" style="color: white;">确认</span>
+                    <span class="" style="color: white;">Confirm</span>
                 </button>
                 <button class="el-button el-button--primary copy up-button copy el-button-cancel" id="confirm-button-cancel" aria-disabled="false" type="button" data-v-7bb2b20a="" style="
                 width: 28%;
@@ -91,7 +91,7 @@ class e extends HTMLElement {
                 border-radius: 12px;
                 border: none;
                 box-shadow: inset 1px 1px 4px 0 hsla(0, 0%, 100%, 0.5)">
-                    <span class="" style="color: white;">取消</span>
+                    <span class="" style="color: white;">Cancel</span>
                 </button>
             </div>
             `)
