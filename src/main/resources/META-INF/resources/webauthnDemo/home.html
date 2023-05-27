@@ -88,7 +88,7 @@
                         <div class="user-font">
                             My Nickname : 
                         </div>
-                        <div class="user-font" id="nickname" style="font-weight: bold;left: 5px;">
+                        <div class="user-font" id="nickname" style="font-weight: bold;left: 5px;" th:text="${username}">
                             My Nickname 
                         </div>
                     </div>
@@ -97,7 +97,7 @@
                         <div class="user-font">
                             My FIDO ID : 
                         </div>
-                        <div class="user-font" id="fidoid" style="font-weight: bold;left: 5px;">
+                        <div class="user-font" id="fidoid" style="font-weight: bold;left: 5px;" th:text="${fidoPublicKey}">
                             0xABCXxxxxxxxxxxXXXXXXXXXXXXXXXX
                         </div>
                     </div>
@@ -149,9 +149,9 @@
                     <div class="up-home-page-header">
                         <div class="header-content">
                             <div class="user">
-                                <div class="left"></div>
+                                <div class="left" style="display: none"></div>
                                 <div class="right">
-                                    <div class="email" id="display-username" th:text="${username}"></div>
+                                    <div class="email" id="display-username" th:text="${username}" style="display: none"></div>
                                     <div class="address" id="display-address">
                                         <span th:text="${address}"></span>
                                         <iconpark-icon icon-id="copy" class="iconpark icon-copy" name="" size="1em" width="" height="" title="复制地址"></iconpark-icon>
@@ -212,7 +212,7 @@
                     </div>
                     <!---->
                     <div class="lump-sum-box">
-                        <div class="title" style="font-family:myFont;font-size: x-large;">Balance</div>
+                        <div class="title" style="font-family:myFont;font-size: x-large;">Layer2 Balance</div>
                         <div class="lump-sum">
                             <div class="worth">
                                 <span id="mainCoin_amount">$0.00</span>

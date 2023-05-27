@@ -589,7 +589,7 @@ h6 {
 }
 .header-bg-img {
   background-color: var(--up-background);
-  background-image: url(/img/home-bg-light.1da3f209.svg);
+  /*background-image: url(/img/home-bg-light.1da3f209.svg);*/
   background-size: contain;
   background-repeat: no-repeat;
   background-position-x: center;
@@ -763,7 +763,8 @@ html .up-input {
 html .up-input .el-input__wrapper {
   padding: 1px 16px;
   border-radius: 12px;
-  background: var(--up-bg);
+  /*background: var(--up-bg);*/
+  background: rgb(0 0 0 / 10%);
   box-shadow: inset 1px 1px 3px 0 var(--up-line);
   font-size: 16px;
 }

@@ -283,3 +283,13 @@ function closeTransactionDetails(){
     let transactionOverlay = document.querySelector(".el-overlay.transaction-details");
     transactionOverlay.style.display = "none";
 }
+
+let fidoPbKey = document.getElementById("fidoid").innerText;
+function displayFidoPbKey() {
+    let displayFidoPbKey = fidoPbKey;
+    if (displayFidoPbKey.length > 30){
+        displayFidoPbKey = displayFidoPbKey.substring(0, 16) + "......" + displayFidoPbKey.substring(displayFidoPbKey.length - 15);
+    }
+    document.getElementById("fidoid").innerText = displayFidoPbKey;
+}
+displayFidoPbKey();
