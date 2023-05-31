@@ -100,7 +100,7 @@ public class ERC4337Utils {
         String accountAddress = wallet.getContractAddress();
         DynamicStruct userOpStruct = createTransactionUserOp(accountAddress,
                 transactionParams.getCoin(),
-                wallet.getAddress(),
+                transactionParams.getFromAddress(),
                 transactionParams.getToAddress(),
                 transactionParams.getAmount(),
                 credentials.getPublicKeyCose());
@@ -130,7 +130,7 @@ public class ERC4337Utils {
         userOperation.setPreVerificationGas(new BigInteger("21000"));
         userOperation.setMaxFeePerGas(new BigInteger("1000000050"));
         userOperation.setMaxPriorityFeePerGas(new BigInteger("1000000000"));
-        userOperation.setFIDOPubKey(fidoPublicKey);
+        userOperation.setFidoPublickey(fidoPublicKey);
         return createUserOpStruct(userOperation);
     }
 
@@ -151,7 +151,7 @@ public class ERC4337Utils {
         BigDecimal value = Convert.toWei(amount, Convert.Unit.ETHER);
         Function callData = new Function(
                 "L1transfer",
-                Arrays.asList(new Uint64(1), new Address(fromAddress), new Address(toAddress), new Uint256(value.longValue()), DynamicBytes.DEFAULT),
+                Arrays.asList(new Uint64(5), new Address(fromAddress), new Address(toAddress), new Uint256(value.longValue()), DynamicBytes.DEFAULT),
                 Collections.emptyList()
         );
 //        System.out.println(FunctionEncoder.encode(callData));
@@ -235,6 +235,10 @@ public class ERC4337Utils {
                     throw new RuntimeException(e);
                 }
             });
+            try {
+                Thread.sleep(5000L);
+            } catch (InterruptedException e) {
+            }
             CompletableFuture.allOf(confirmTxFuture).thenRun(()->{
                 String registerHash = null;
                 try {
@@ -262,12 +266,12 @@ public class ERC4337Utils {
 
 //        int salt = (int) (System.currentTimeMillis()/1000);
         userOperation.setAddress(accountAddress);
-        userOperation.setFIDOPubKey(publicKeyCose);
+        userOperation.setFidoPublickey(publicKeyCose);
         byte[] initCode = createInitCode(publicKeyCose, ERC4337Const.ACCOUNT_SALT);
         System.out.println(Numeric.toHexString(initCode));
         userOperation.setInitCode(initCode);
-        userOperation.setVerificationGasLimit(new BigInteger("10000000"));
-        userOperation.setPreVerificationGas(new BigInteger("210000"));
+        userOperation.setVerificationGasLimit(new BigInteger("1500000"));
+        userOperation.setPreVerificationGas(new BigInteger("21000"));
         userOperation.setMaxFeePerGas(new BigInteger("1000000050"));
         userOperation.setMaxPriorityFeePerGas(new BigInteger("1000000000"));
 
