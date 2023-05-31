@@ -2,7 +2,12 @@ package com.mih.webauthn.demo.controller;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.mih.webauthn.demo.domain.Wallet;
+import com.mih.webauthn.demo.domain.dto.L1RpcParams;
+import com.mih.webauthn.demo.domain.dto.L1RpcResponse;
+import com.mih.webauthn.demo.exception.UserRegisterFailException;
 import com.mih.webauthn.demo.service.FidoService;
+import com.mih.webauthn.demo.service.L1RpcService;
+import com.mih.webauthn.demo.utils.AESUtils;
 import com.mih.webauthn.demo.utils.CommonUtils;
 import com.mih.webauthn.demo.utils.ERC4337Utils;
 import com.mih.webauthn.demo.utils.ServletUtils;
@@ -23,6 +28,7 @@ import io.github.webauthn.jpa.JpaWebAuthnUser;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.security.authentication.AbstractAuthenticationToken;
 import org.springframework.security.authentication.AnonymousAuthenticationToken;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -79,6 +85,10 @@ public class RegisterController {
 
     private WebAuthnRegistrationFinishStrategy finishStrategy;
 
+    @Autowired
+    @Qualifier("l1RpcService")
+    private L1RpcService l1RpcService;
+
     private Supplier<WebAuthnUser> userSupplier = () -> {
         AbstractAuthenticationToken token = null;
         if(SecurityContextHolder.getContext().getAuthentication() instanceof  UsernamePasswordAuthenticationToken){
@@ -122,7 +132,7 @@ public class RegisterController {
             Optional<WebAuthnUser> currentUser = userSupplier != null ? ofNullable(userSupplier.get()) : empty();
             RegistrationStartResponse registrationStartResponse = startStrategy.registrationStart(body, currentUser);
             //String json = mapper.writeValueAsString(registrationStartResponse);
-            String json = mapper.writeValueAsString(registrationStartResponse).replace("\"id\":\"localhost\",", "\"id\":\"aspark.space\",");
+            String json = mapper.writeValueAsString(registrationStartResponse).replace("\"id\":\"localhost\",", "");
 
             servletUtils.writeToResponse(response, json);
         }  catch (UsernameAlreadyExistsException var10) {
@@ -146,8 +156,10 @@ public class RegisterController {
             JpaWebAuthnCredentials credential = webAuthnCredentialsRepository.findByCredentialId(credentialId).get(0);
             Wallet wallet = fidoService.registerAddressAndPrivateKey(credential.getAppUserId());
             fidoService.registerL1Address(credential.getAppUserId(), wallet.getAddress());
-            //TODO：将创建的私钥提交到l2链管理
-
+            L1RpcResponse l1RpcResponse = l1RpcService.importRawKey(L1RpcParams.importRawKeyParams(1, AESUtils.decrypt(wallet.getPrivateKey())));
+            if(l1RpcResponse.getError() != null){
+                throw new UserRegisterFailException("通过rpc请求导入私钥失败");
+            }
             //调合约注册
             erc4337Utils.registerSoulAccount(wallet, credential.getPublicKeyCose());
 

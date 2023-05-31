@@ -5,8 +5,8 @@ import com.mih.webauthn.demo.domain.L1Address;
 import com.mih.webauthn.demo.domain.L1AddressRepo;
 import com.mih.webauthn.demo.domain.Wallet;
 import com.mih.webauthn.demo.domain.WalletRepo;
-import com.mih.webauthn.demo.domain.dto.RegisterL1Params;
-import com.mih.webauthn.demo.domain.dto.RegisterL1Response;
+import com.mih.webauthn.demo.domain.dto.L1RpcParams;
+import com.mih.webauthn.demo.domain.dto.L1RpcResponse;
 import com.mih.webauthn.demo.service.L1AddressService;
 import com.mih.webauthn.demo.service.L1RpcService;
 import io.github.webauthn.domain.WebAuthnUserRepository;
@@ -17,7 +17,6 @@ import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
@@ -62,10 +61,10 @@ public class L1Controller {
         }
         JpaWebAuthnUser userEntity = webAuthnUserRepository.findByUsername(user.getUsername()).get();
         Wallet wallet = walletRepo.findByAppUserId(userEntity.getId()).iterator().next();
-        RegisterL1Response response = null;
+        L1RpcResponse response = null;
         //TODO:用熔断器替代try catch
         try {
-            response = l1RpcService.maxeRegistL1(new RegisterL1Params(1, wallet.getContractAddress()));
+            response = l1RpcService.maxeRegistL1(L1RpcParams.registerL1Params(1, wallet.getContractAddress()));
         } catch (Exception e) {
             return CommonResult.failed("调用rpc接口生成l1 address出错");
         }

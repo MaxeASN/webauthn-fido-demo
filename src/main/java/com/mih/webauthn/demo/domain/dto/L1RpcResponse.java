@@ -4,7 +4,7 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Data;
 
 @Data
-public class RegisterL1Response {
+public class L1RpcResponse {
     @JsonProperty("jsonrpc")
     private String jsonrpc;
 
