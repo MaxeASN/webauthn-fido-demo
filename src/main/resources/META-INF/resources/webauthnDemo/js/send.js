@@ -69,8 +69,3 @@ function removeErrorDiv(div){
 
 document.querySelector("#el-id-2950-8").addEventListener('input', checkEthAddress);
 document.querySelector("#el-id-2950-7").addEventListener('input', checkAmount);
-document.querySelector("#next-step-button").addEventListener('click', function (){
-    if(amountInput.value === null || amountInput.value === ''){
-        createErrorDiv(amountDiv, "请输入转账金额");
-    }
-});

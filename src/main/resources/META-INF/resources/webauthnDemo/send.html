@@ -275,11 +275,11 @@
     }
 </script>
 <script type="text/javascript">
-    //判断地址输入是否为空
     document.getElementById("next-step-button").addEventListener('click', function (){
         const inputVal = ethAddressInput.value;
         let addressInput = document.getElementById("address-input");
         let errorNode = addressInput.querySelector(".error");
+        //判断地址输入是否为空
         if(inputVal === null || inputVal === ''){
             if(errorNode !== null){
                 addressInput.removeChild(errorNode);
@@ -289,6 +289,12 @@
             errorDiv.className = "error";
             errorDiv.innerHTML = `<iconpark-icon icon-id="wrong" class="iconpark icon-wrong" name="" size="1em" width="" height=""></iconpark-icon>请输入转账地址 (0x)`
             document.getElementById("address-input").appendChild(errorDiv);
+        }
+
+        //判断金额输入是否为空
+        const amountInputVal = amountInput.value;
+        if(amountInputVal === null || amountInputVal === ''){
+            createErrorDiv(amountDiv, "请输入转账金额")
         }
 
         if(document.querySelector(".error") === null){
@@ -302,12 +308,12 @@
             confirmNodeParent.removeChild(document.querySelector("webauthn-transaction"));
             let confirmTitleNode = document.getElementById("title-confirm");
             confirmTitleNode.insertAdjacentHTML("afterend", `<webauthn-transaction symbol=${symbol} amount=${amount} from=${from} to=${to}></webauthn-transaction>`);
-            cancelEvent();
+            addCancelEvent();
 
             document.getElementById("transaction-confirm").setAttribute("style", "z-index: 2012;");
         }
     })
-    function cancelEvent(){
+    function addCancelEvent(){
         let webauthnTransaction = document.querySelector('webauthn-transaction');
         let cancelButton = webauthnTransaction.shadowRoot.querySelector('#confirm-button-cancel');
         cancelButton.addEventListener('click', function (){
