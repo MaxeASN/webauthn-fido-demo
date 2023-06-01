@@ -94,8 +94,9 @@ tokenTab.addEventListener('click', function (){
 //displayBalance
 let address = document.querySelector("#display-address > span").innerText;
 const username = document.getElementById("display-username").innerText;
+let web3_l1 = web3_goerli_eth;
 Cookies.set("username", username, { expires: 36500 })
-function disPlayAddress(){
+function displaySelectAddress(){
     if(address && username){
         let displayAddress;
         if(Cookies.get(username+"_select_address")){
@@ -108,27 +109,58 @@ function disPlayAddress(){
         document.querySelector("#display-address > span").innerText = displayAddress;
     }
 }
-disPlayAddress()
+displaySelectAddress()
 if(address){
-    getAndUpdateMainCoinBalance();
+    getAndUpdateLayer2Balance();
     setInterval(() => {
-        getAndUpdateMainCoinBalance();
+        getAndUpdateLayer2Balance();
     }, 10000); //10秒刷新一次余额
 
 }
 
-function getAndUpdateMainCoinBalance(){
+if(address && username){
+    getAndUpdateLayer1Balance();
+    setInterval(() => {
+        getAndUpdateLayer1Balance();
+    }, 10000); //10秒刷新一次余额
+}
+
+function getAndUpdateLayer1Balance() {
+    let selectAddress = Cookies.get(username+"_select_address") || address;
+    web3_l1.eth.getBalance(address, (err, balance) => {
+        if (err) {
+            console.error(err);
+            return;
+        }
+        balance = web3.utils.fromWei(balance, 'ether');
+        updateLayer1EthBalance(balance);
+    });
+}
+
+function updateLayer1EthBalance(balance) {
+    let result = formatBalance(balance);
+    let ethAmount = document.querySelector("#token-box-balance-eth > div:nth-child(2)");
+    ethAmount.innerText = result;
+}
+
+function getAndUpdateLayer2Balance(){
     web3.eth.getBalance(address, (err, balance) => {
         if (err) {
             console.error(err);
             return;
         }
         balance = web3.utils.fromWei(balance, 'ether');
-        updateMainCoinBalance(balance);
+        updateLayer2EthBalance(balance);
     });
 }
 
-function updateMainCoinBalance(balance){
+function updateLayer2EthBalance(balance){
+    let result = formatBalance(balance);
+    let ethAmount = document.getElementById("mainCoin_amount");
+    ethAmount.innerText = result;
+}
+
+function formatBalance(balance){
     let strNum = balance.toString(); // 将num转换为字符串
     let index = strNum.indexOf('.');
     if (strNum.substring(index+1) > 4) {
@@ -142,12 +174,9 @@ function updateMainCoinBalance(balance){
         if (strNum.charAt(index + 3) !== '0' && strNum.charAt(index + 4) === '0') {
             result = strNum.slice(0, index + 4); // 取小数点前两位和小数点后一位
         }
-
-        let mainCoinAmount = document.getElementById("mainCoin_amount");
-        mainCoinAmount.innerText = result;
-        // let tokenBoxEthBalance = document.querySelector("#token-box-balance-eth > div:nth-child(2)");
-        // tokenBoxEthBalance.innerText = result;
+        return result;
     }
+    return balance;
 }
 
 //displayTransactionHistory
@@ -249,7 +278,7 @@ function updateDisplayAddress(event) {
     const selectAddress = event.currentTarget.querySelector(".label").innerText;
     Cookies.set(username + "_select_address", selectAddress, {expires: 36500});
     displayL1Address();
-    disPlayAddress();
+    displaySelectAddress();
 }
 
 function displayCreateAddressConfirm(){
