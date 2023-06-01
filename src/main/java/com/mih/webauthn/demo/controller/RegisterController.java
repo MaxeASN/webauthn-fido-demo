@@ -124,7 +124,7 @@ public class RegisterController {
     public void registerStart(HttpServletRequest request, HttpServletResponse response, @AuthenticationPrincipal UserDetails user) throws IOException {
         //TODO:当用户登录成功后，再去注册时会将设备注册进登录的账户下
         if(user != null){
-            servletUtils.writeBadRequestToResponse(response, Map.of("message", "请退出登录再重新注册！"));
+            servletUtils.writeBadRequestToResponse(response, Map.of("message", "Please log out before re registering!"));
             return;
         }
         RegistrationStartRequest body = servletUtils.parseRequest(request, RegistrationStartRequest.class);
@@ -137,7 +137,7 @@ public class RegisterController {
             servletUtils.writeToResponse(response, json);
         }  catch (UsernameAlreadyExistsException var10) {
             //servletUtils.writeBadRequestToResponse(response, new RegistrationStartResponse(RegistrationStartResponse.Status.USERNAME_TAKEN));
-            servletUtils.writeBadRequestToResponse(response, Map.of("message", "用户名已存在！"));
+            servletUtils.writeBadRequestToResponse(response, Map.of("message", "The username already exists!"));
         } catch (InvalidTokenException var11) {
             //servletUtils.writeBadRequestToResponse(response, new RegistrationStartResponse(RegistrationStartResponse.Status.TOKEN_INVALID));
             servletUtils.writeBadRequestToResponse(response, Map.of("message", "无效的token！"));
