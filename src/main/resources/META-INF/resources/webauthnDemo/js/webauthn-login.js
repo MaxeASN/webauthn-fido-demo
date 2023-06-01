@@ -183,8 +183,11 @@ class e extends HTMLElement {
             const e = new FormData(t.target).get(this.inputName), n = await fetch(this.assertionStartUrl, {
                 ...this.fetchOptions,
                 body: JSON.stringify({username: e})
-            }), {assertionId: i, publicKeyCredentialRequestOptions: s} = await n.json();
-            if (!n.ok) throw new Error("Could not successfuly start login");
+            }), {assertionId: i, publicKeyCredentialRequestOptions: s, message: m1} = await n.json();
+            if (!n.ok) {
+                alert(m1);
+                throw new Error("Could not successfuly start login");
+            }
             const r = await this._getPublicKeyCredentialRequestOptionsDecoder(),
                 o = await navigator.credentials.get({publicKey: r(s)});
             this.dispatchEvent(new CustomEvent("login-retrieved"));
@@ -192,7 +195,9 @@ class e extends HTMLElement {
                 ...this.fetchOptions,
                 body: JSON.stringify({assertionId: i, credential: a(o)})
             });
-            if (!u.ok) throw new Error("Could not successfuly complete login");
+            if (!u.ok){
+                throw new Error("Could not successfuly complete login");
+            }
             const l = await u.json();
             this.dispatchEvent(new CustomEvent("login-finished", {detail: l}))
         } catch (t) {
