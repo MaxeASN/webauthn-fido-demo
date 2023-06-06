@@ -36,6 +36,7 @@ import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.transaction.interceptor.TransactionAspectSupport;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -167,6 +168,7 @@ public class RegisterController {
         } catch (Exception e) {
             log.error("注册失败：" + e.getMessage());
             log.error(CommonUtils.toStackTrace(e));
+            TransactionAspectSupport.currentTransactionStatus().setRollbackOnly();
             servletUtils.writeBadRequestToResponse(response, Map.of("message", "注册失败，请联系管理员。"));
         }
 
