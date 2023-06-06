@@ -19,9 +19,6 @@ public class L1RpcParams {
     @JsonProperty("params")
     private Object[] params;
 
-    public L1RpcParams() {
-    }
-
     public static L1RpcParams registerL1Params(int chainId, String accountAddress) {
         L1RpcParams l1RpcParams = new L1RpcParams();
         l1RpcParams.method = "maxe_registL1";
