@@ -23,6 +23,8 @@ public class UserOperation{
 
     private byte[] paymasterAndData = new byte[0];
 
+    private byte[] l1TxData = new byte[0];
+
     private byte[] fidoPublickey = new byte[0];
 
     private byte[] signature = new byte[0];
@@ -41,10 +43,6 @@ public class UserOperation{
 
     public byte[] getFIDOPubKey() {
         return fidoPublickey;
-    }
-
-    public void setFIDOPubKey(byte[] FIDOPubKey) {
-        this.fidoPublickey = FIDOPubKey;
     }
 
     public BigInteger getNonce() {
@@ -117,6 +115,22 @@ public class UserOperation{
 
     public void setPaymasterAndData(byte[] paymasterAndData) {
         this.paymasterAndData = paymasterAndData;
+    }
+
+    public byte[] getL1TxData() {
+        return l1TxData;
+    }
+
+    public void setL1TxData(byte[] l1TxData) {
+        this.l1TxData = l1TxData;
+    }
+
+    public byte[] getFidoPublickey() {
+        return fidoPublickey;
+    }
+
+    public void setFidoPublickey(byte[] fidoPublickey) {
+        this.fidoPublickey = fidoPublickey;
     }
 
     public byte[] getSignature() {

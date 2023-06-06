@@ -129,7 +129,7 @@ public class EthUtils {
         BigInteger gasPrice = web3j.ethGasPrice().send().getGasPrice();
         Function function = new Function(methodName, inputParams, outputParams);
         String data = FunctionEncoder.encode(function);
-        BigInteger gasLimit = new BigInteger("1000000");
+        BigInteger gasLimit = new BigInteger("10000000");
 
         RawTransaction rawTransaction = RawTransaction.createTransaction(
                 nonce,
