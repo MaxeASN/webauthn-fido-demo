@@ -59,7 +59,9 @@
 <!--    <script recaptcha-v3-script="" src="https://www.google.com/recaptcha/api.js?render=explicit"></script>-->
     <link rel="stylesheet" type="text/css" href="./css/6592.acb1dd5a.css">
     <script type="module" src="js/webauthn-transaction.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/web3@1.5.2/dist/web3.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/js-cookie@3.0.0/dist/js.cookie.min.js"></script>
+    <script src="js/jquery-3.7.0.min.js"></script>
     <style>
         body {
             background-image: url("img/background.jpg");
@@ -106,7 +108,10 @@
                         </div>
                         <div class="index">
                             <div class="index-title">undefined</div>
-                            <div class="index-subtitle" style="color: white">balance undefined undefined</div>
+                            <div class="index-subtitle" style="color: white">balance
+                                <span id="balance_amount">undefined</span>
+                                <span id="balance_symbol">undefined</span>
+                            </div>
                         </div>
                     </div>
                     <div class="el-form-item is-required asterisk-left amount up-form-item amount">
@@ -264,10 +269,12 @@
 <script type="text/javascript">
     const urlParams = new URLSearchParams(window.location.search);
     const symbol = urlParams.get('symbol');
+    const chain = urlParams.get('chain');
     let indexTitle =  document.querySelector(".index-title");
     indexTitle.style.color = "white";
 
     if(symbol === "ETH" || symbol === "USDT" || symbol === "USDC"){
+        $('#balance_symbol').text(symbol);
         indexTitle.innerHTML = symbol;
         let icons = document.getElementsByTagName("iconpark-icon");
         icons[1].setAttribute("icon-id", symbol);
@@ -321,7 +328,9 @@
         })
     }
 </script>
+<script type="text/javascript" src="js/fido-api-constants.js"></script>
 <script type="text/javascript" src="js/send.js"></script>
+<script src="js/utils/common.js"></script>
 </body>
 <div style="all: initial;">
     <div id="__hcfy__" style="all: initial;"></div>

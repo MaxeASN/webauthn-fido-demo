@@ -5,6 +5,35 @@ let amountDiv = document.getElementById("amount-input");
 
 const ethAddressRegex = /^(0x)?[a-fA-F0-9]{40}$/;
 
+async function displayBalance(){
+    let web3_url;
+    let username = Cookies.get("username");
+    let selectAddress = Cookies.get(username+"_select_address");
+    if(!selectAddress){
+        return;
+    }
+    if(chain === "eth"){
+        web3_url = web3_goerli_eth;
+        web3_url.eth.getBalance(selectAddress, (err, balance) => {
+            if (err) {
+                console.error(err);
+                return;
+            }
+            balance = web3.utils.fromWei(balance, 'ether');
+            balance = formatBalance(balance);
+            updateSendPageBalance(balance);
+        });
+    }else{
+        return;
+    }
+}
+
+function updateSendPageBalance(balance){
+    $('#balance_amount').text(balance);
+}
+
+displayBalance();
+
 function checkEthAddress() {
     const inputVal = ethAddressInput.value;
     let addressDiv = document.getElementById("address-input");
@@ -43,6 +72,8 @@ function checkAmount(){
     amountInput.value = inputVal;
     if(inputVal < 0.0001){
         createErrorDiv(amountDiv, "转账金额不能小于0.0001")
+    }else if(inputVal > $('#balance_amount').text()){
+        createErrorDiv(amountDiv, "余额不足")
     }else{
         removeErrorDiv(amountDiv)
     }
