@@ -555,9 +555,9 @@
         let coinMenu = document.getElementById("setting-coin-icon");
         coinMenu.addEventListener('click', showCoinMenu);
 
-        function showCoinMenu(){
+        async function showCoinMenu(){
             if (addressOptionDiv.style.display !== "none") {
-                displayL1Address();
+                await displayL1Address();
             }
             let setIcon = document.querySelector(".setting-icons");
             if(setIcon.getAttribute("data-display") === "false"){

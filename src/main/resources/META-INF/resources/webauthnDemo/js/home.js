@@ -126,7 +126,7 @@ if(address && username){
     }, 10000); //10秒刷新一次余额
 }
 
-function getAndUpdateLayer1Balance() {
+async function getAndUpdateLayer1Balance() {
     let selectAddress = Cookies.get(username+"_select_address") || address;
     web3_l1.eth.getBalance(selectAddress, (err, balance) => {
         if (err) {
@@ -144,7 +144,7 @@ function updateLayer1EthBalance(balance) {
     ethAmount.innerText = result;
 }
 
-function getAndUpdateLayer2Balance(){
+async function getAndUpdateLayer2Balance(){
     web3.eth.getBalance(address, (err, balance) => {
         if (err) {
             console.error(err);
@@ -201,13 +201,13 @@ function formatDate(dateString) {
 
 //获取用户地址列表并显示
 let addressOptionDiv = document.querySelector(".chain-select-container.address-options");
-function displayL1Address() {
+async function displayL1Address() {
     if (addressOptionDiv.style.display === "none") {
-        updateL1Address();
+        await updateL1Address();
         //取消显示主网选择
         let setIcon = document.querySelector(".setting-icons");
         if (setIcon.getAttribute("data-display") === "true") {
-            showCoinMenu();
+            await showCoinMenu();
         }
 
         document.querySelector(".up-home-page-header").classList.add("up-home-page-header-bg");
@@ -220,10 +220,10 @@ function displayL1Address() {
     }
 }
 
-function updateL1Address(){
+async function updateL1Address(){
     if(username === "" || address==="") return;
     let selectAddress = Cookies.get(username+"_select_address") || address;
-    fetch(GET_L1ADDRESS)
+    await fetch(GET_L1ADDRESS)
         .then(response => response.json())
         .then(({code: c, message: m, data: d}) => [c, m, d])
         .then(([code, message, data]) => {
