@@ -24,7 +24,7 @@ import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping("api/l1")
-@CrossOrigin
+@CrossOrigin(origins = "http://localhost:3000", allowCredentials = "true")
 public class L1Controller {
     @Autowired
     private L1AddressRepo l1AddressRepo;
@@ -45,7 +45,7 @@ public class L1Controller {
     @RequestMapping("list")
     public CommonResult queryL1Address(@AuthenticationPrincipal UserDetails user){
         if(user == null){
-            return CommonResult.failed("用户尚未登录");
+            return CommonResult.unAuthorization();
         }
         JpaWebAuthnUser userEntity = webAuthnUserRepository.findByUsername(user.getUsername()).get();
 //        JpaWebAuthnUser userEntity = webAuthnUserRepository.findByUsername("chen10").get();
@@ -57,7 +57,7 @@ public class L1Controller {
     @RequestMapping("add")
     public CommonResult addL1Address(@AuthenticationPrincipal UserDetails user){
         if(user == null){
-            return CommonResult.failed("用户尚未登录");
+            return CommonResult.unAuthorization();
         }
         JpaWebAuthnUser userEntity = webAuthnUserRepository.findByUsername(user.getUsername()).get();
         Wallet wallet = walletRepo.findByAppUserId(userEntity.getId()).iterator().next();

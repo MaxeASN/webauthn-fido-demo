@@ -56,6 +56,10 @@ public class CommonResult<T> {
         return new CommonResult<T>(errorCode, errorMsg, null);
     }
 
+    public static <T> CommonResult<T> unAuthorization() {
+        return new CommonResult<T>(400, "用户尚未登录", null);
+    }
+
     public long getCode() {
         return code;
     }

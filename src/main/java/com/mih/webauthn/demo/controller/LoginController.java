@@ -36,7 +36,7 @@ import java.util.function.BiConsumer;
 
 @RestController
 @RequestMapping("api/diyLogin")
-@CrossOrigin
+@CrossOrigin(origins = "http://localhost:3000", allowCredentials = "true")
 public class LoginController {
 
     @Autowired

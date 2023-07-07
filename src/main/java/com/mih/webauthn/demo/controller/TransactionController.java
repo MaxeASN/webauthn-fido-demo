@@ -2,6 +2,7 @@ package com.mih.webauthn.demo.controller;
 
 import com.alibaba.fastjson.JSONObject;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.mih.webauthn.demo.constant.BlockchainConst;
 import com.mih.webauthn.demo.controller.response.CommonPage;
 import com.mih.webauthn.demo.controller.response.CommonResult;
 import com.mih.webauthn.demo.domain.Transaction;
@@ -33,22 +34,28 @@ import org.springframework.cache.concurrent.ConcurrentMapCache;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
-import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
+import org.web3j.crypto.Credentials;
+import org.web3j.crypto.RawTransaction;
+import org.web3j.crypto.TransactionEncoder;
 import org.web3j.protocol.Web3j;
-import org.web3j.protocol.core.methods.response.EthGetTransactionReceipt;
+import org.web3j.protocol.core.DefaultBlockParameterName;
+import org.web3j.protocol.core.methods.response.EthSendTransaction;
+import org.web3j.protocol.core.methods.response.TransactionReceipt;
+import org.web3j.protocol.http.HttpService;
+import org.web3j.utils.Numeric;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
+import java.math.BigInteger;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
-import java.util.concurrent.CompletableFuture;
 
 @RestController
 @RequestMapping("api/transaction")
-@CrossOrigin
+@CrossOrigin(origins = "http://localhost:3000", allowCredentials = "true")
 public class TransactionController {
     private static final Logger log = LoggerFactory.getLogger(TransactionController.class);
 
@@ -61,8 +68,8 @@ public class TransactionController {
     @Autowired
     private RelyingParty relyingParty;
 
-//    @Autowired
-//    private Web3j web3j;
+    @Autowired
+    private Web3j web3j;
 
     private final WebAuthnOperation<AssertionStartResponse, String> operation = new InMemoryOperation<>();
 
@@ -93,7 +100,7 @@ public class TransactionController {
                             HttpServletResponse response,
                             @AuthenticationPrincipal UserDetails user) throws IOException {
         //TODO:校验请求参数是否合法
-        //TODO:选择哪一条链下的哪一个地址去发送交易
+        //TODO:选择哪一条链下去发送交易
         //TODO:防止用户点快了多发送了一笔交易
         //TODO:发送交易前确保用户余额足够
         if(user == null){
@@ -121,11 +128,10 @@ public class TransactionController {
     }
 
     @RequestMapping("finish")
-    @Transactional
     public Object signResponse(@AuthenticationPrincipal UserDetails user,
                                             HttpServletRequest request) throws IOException{
         if(user == null){
-            return CommonResult.failed("用户尚未登录");
+            return CommonResult.unAuthorization();
         }
         JpaWebAuthnUser userEntity = webAuthnUserRepository.findByUsername(user.getUsername()).get();
         WebAuthnAssertionFinishStrategy assertionFinishStrategy = new WebAuthnAssertionFinishStrategy(
@@ -160,12 +166,12 @@ public class TransactionController {
         }
         //TODO:处理发送交易后可能会发生的报错
         Long l1AddressId = transactionService.findL1AddressIdByAddress(requestParams.getFromAddress());
-        Transaction transaction = new Transaction(userEntity.getId(), "1", requestParams.getCoin(), l1AddressId, requestParams.getToAddress(),
+        Transaction transaction = new Transaction(userEntity.getId(), "5", requestParams.getCoin(), l1AddressId, requestParams.getToAddress(),
                 requestParams.getAmount(), transactionHash);
         transactionRepo.save(transaction);
 
         cacheMap.evict(body.getAssertionId());
-        return CommonResult.success();
+        return CommonResult.success(Map.of("transactionHash", transactionHash));
     }
 
     @RequestMapping("list")
@@ -173,7 +179,7 @@ public class TransactionController {
                                                                       @RequestParam(defaultValue = "1") Integer pageNum,
                                                                       @RequestParam(defaultValue = "20") Integer pageSize){
         if(user == null){
-            return CommonResult.failed("用户尚未登录");
+            return CommonResult.unAuthorization();
         }
         JpaWebAuthnUser userEntity = webAuthnUserRepository.findByUsername(user.getUsername()).get();
         List<Transaction> transactionList = transactionService.findAllByAppUserId(userEntity.getId(), 1, 20);
@@ -181,8 +187,25 @@ public class TransactionController {
     }
 
     @RequestMapping("test")
-    public String test(){
-        return "hello";
+    public String test(@RequestParam String from, @RequestParam String to) throws IOException {
+        BigInteger gas = new BigInteger("21000");
+        BigInteger gasPrice = new BigInteger("14300000000");
+        BigInteger value = BigInteger.ZERO;
+        BigInteger nonce = web3j.ethGetTransactionCount(from, DefaultBlockParameterName.LATEST).send().getTransactionCount();
+        // 构造交易
+        // 创建一个转账交易对象并签名
+        RawTransaction rawTransaction = RawTransaction.createEtherTransaction(5L, nonce, gas, to, value, BigInteger.ZERO, gasPrice);
+        Credentials credential = Credentials.create("5b0dc78a4a58f97795443ac935851d38dea4ab9ad48e61678f61d58ca71ace7d");
+        System.out.println(credential.getAddress());
+        byte[] signMessage = TransactionEncoder.signMessage(rawTransaction, credential);
+        EthSendTransaction ethSendTransaction = web3j.ethSendRawTransaction(Numeric.toHexString(signMessage)).send();
+        return ethSendTransaction.getTransactionHash();
+    }
+
+    @RequestMapping("test2")
+    public String test2(@RequestParam String hash) throws IOException {
+        org.web3j.protocol.core.methods.response.Transaction transaction = web3j.ethGetTransactionByHash(hash).send().getTransaction().get();
+        return transaction.toString();
     }
 
 }

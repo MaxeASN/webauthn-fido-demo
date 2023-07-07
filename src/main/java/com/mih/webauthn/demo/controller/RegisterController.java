@@ -54,7 +54,7 @@ import static java.util.Optional.ofNullable;
 
 @RestController
 @RequestMapping("api/diyRegister")
-@CrossOrigin
+@CrossOrigin(origins = "http://localhost:3000", allowCredentials = "true")
 public class RegisterController {
     private static final Logger log = LoggerFactory.getLogger(RegisterController.class);
 
