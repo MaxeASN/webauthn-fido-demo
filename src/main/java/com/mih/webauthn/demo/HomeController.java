@@ -1,5 +1,6 @@
 package com.mih.webauthn.demo;
 
+import com.mih.webauthn.demo.controller.response.CommonResult;
 import com.mih.webauthn.demo.domain.Account;
 import com.mih.webauthn.demo.domain.AccountRepo;
 import com.mih.webauthn.demo.domain.Wallet;
@@ -11,6 +12,8 @@ import io.github.webauthn.domain.WebAuthnUserRepository;
 import io.github.webauthn.jpa.JpaWebAuthnCredentials;
 import io.github.webauthn.jpa.JpaWebAuthnUser;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.Authentication;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -19,12 +22,13 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.ResponseBody;
 import org.web3j.utils.Numeric;
 
+import java.util.HashMap;
 import java.util.Map;
 
 @Controller
-@CrossOrigin
 public class HomeController {
 
     @Autowired
@@ -53,5 +57,24 @@ public class HomeController {
     @GetMapping("/send")
     public String send(){
         return "send";
+    }
+
+    @GetMapping("/api/userInfo")
+    @ResponseBody
+    @CrossOrigin(origins = "http://localhost:3000", allowCredentials = "true")
+    public CommonResult getUserInfo(){
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        if(!(authentication instanceof UsernamePasswordAuthenticationToken)){
+            return CommonResult.unAuthorization();
+        }
+        WebAuthnCredentials credential = (WebAuthnCredentials) authentication.getCredentials();
+        WebAuthnUser user = (WebAuthnUser) authentication.getPrincipal();
+        Wallet wallet = walletRepo.findByAppUserId(user.getId()).iterator().next();
+        Map<String, String> map = new HashMap<>();
+        map.put("username", user.getUsername());
+        map.put("address", wallet.getAddress());
+        map.put("contractAddress", wallet.getContractAddress());
+        map.put("fidoPublicKey", Numeric.toHexString(credential.getPublicKeyCose()));
+        return CommonResult.success(map);
     }
 }
