@@ -14,14 +14,12 @@ import io.github.webauthn.jpa.JpaWebAuthnCredentials;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
+import org.web3j.abi.DefaultFunctionEncoder;
 import org.web3j.abi.FunctionEncoder;
 import org.web3j.abi.FunctionReturnDecoder;
 import org.web3j.abi.TypeReference;
 import org.web3j.abi.datatypes.*;
-import org.web3j.abi.datatypes.generated.Bytes32;
-import org.web3j.abi.datatypes.generated.Uint192;
-import org.web3j.abi.datatypes.generated.Uint256;
-import org.web3j.abi.datatypes.generated.Uint64;
+import org.web3j.abi.datatypes.generated.*;
 import org.web3j.crypto.Credentials;
 import org.web3j.crypto.ECKeyPair;
 import org.web3j.crypto.Sign;
@@ -73,8 +71,9 @@ public class ERC4337Utils {
         structParams.add(new Uint256(uo.getMaxFeePerGas()));
         structParams.add(new Uint256(uo.getMaxPriorityFeePerGas()));
         structParams.add(new DynamicBytes(uo.getPaymasterAndData()));
-        structParams.add(new DynamicBytes(uo.getSignature()));
+        structParams.add(new DynamicBytes(uo.getL1TxData()));
         structParams.add(new DynamicBytes(uo.getFIDOPubKey()));
+        structParams.add(new DynamicBytes(uo.getSignature()));
         return new DynamicStruct(structParams);
     }
 
@@ -103,6 +102,7 @@ public class ERC4337Utils {
                 transactionParams.getFromAddress(),
                 transactionParams.getToAddress(),
                 transactionParams.getAmount(),
+                transactionParams.getData(),
                 credentials.getPublicKeyCose());
         String transactionHash = ethUtils.sendContract(wallet,
                 ERC4337Const.ENTRYPOINT_ADDRESS,
@@ -118,13 +118,15 @@ public class ERC4337Utils {
                                                   String fromAddress,
                                                   String toAddress,
                                                   BigDecimal amount,
+                                                  String data,
                                                   byte[] fidoPublicKey) throws IOException {
         UserOperation userOperation = new UserOperation();
         userOperation.setAddress(accountAddress);
         BigInteger nonce = getAccountNonce(accountAddress);
         userOperation.setNonce(nonce);
-        byte[] callData = createCalldata(coin, fromAddress, toAddress, amount);
-        userOperation.setCallData(callData);
+//        byte[] callData = createCalldata(coin, fromAddress, toAddress, amount);
+//        userOperation.setCallData(callData);
+        userOperation.setL1TxData(createL1TxData(5, coin, fromAddress,toAddress, amount, data));
         userOperation.setCallGasLimit(new BigInteger("300000"));
         userOperation.setVerificationGasLimit(new BigInteger("300000"));
         userOperation.setPreVerificationGas(new BigInteger("21000"));
@@ -135,7 +137,6 @@ public class ERC4337Utils {
     }
 
     private byte[] createCalldata(int coin, String fromAddress, String toAddress, BigDecimal amount) {
-        //TODO:考虑主币非代币转账的情况
         if(coin == ERC20Const.COIN_MAIN){
             return createMainCoinTransferCallData(fromAddress, toAddress, amount);
         }
@@ -217,6 +218,38 @@ public class ERC4337Utils {
         return outputStream.toByteArray();
     }
 
+    public byte[] createPaymasterAndData() throws IOException {
+        byte[] aaasCreationPaymasterBytes = Numeric.hexStringToByteArray(ERC4337Const.AAAS_CREATION_PAYMASTER_ADDRESS.replace("0x", ""));
+        long MOCK_VALID_UNTIL = System.currentTimeMillis()/1000;
+        long MOCK_VALID_AFTER = MOCK_VALID_UNTIL + 10000; //有效期三分钟
+        String validTimeStr = DefaultFunctionEncoder.encodeConstructor(Arrays.asList(new Uint48(MOCK_VALID_AFTER), new Uint48(MOCK_VALID_UNTIL)));
+        byte[] validTimeBytes = Numeric.hexStringToByteArray(validTimeStr);
+        ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
+        outputStream.write(aaasCreationPaymasterBytes);
+        outputStream.write(validTimeBytes);
+        System.out.println(Numeric.toHexString(outputStream.toByteArray()));
+        return outputStream.toByteArray();
+    }
+
+    //public2private
+    public byte[] createL1TxData(int chainId, int coin, String fromAddress, String toAddress, BigDecimal amount, String data){
+        if(coin == ERC20Const.COIN_MAIN){
+            return createMainCoinL1TxData(chainId, fromAddress, toAddress, amount, data);
+        }
+        return null;
+    }
+
+    private byte[] createMainCoinL1TxData(int chainId, String fromAddress, String toAddress, BigDecimal amount, String data) {
+        String l1TxDataStr = FunctionEncoder.encodeConstructor(Arrays.asList(
+                new Uint64(chainId),
+                new Address(fromAddress),
+                new Address(toAddress),
+                new Uint256(Convert.toWei(amount, Convert.Unit.ETHER).toBigInteger()),
+                new DynamicBytes(Numeric.hexStringToByteArray(data))
+        ));
+        return Numeric.hexStringToByteArray(l1TxDataStr);
+    }
+
     public void registerSoulAccount(Wallet wallet, byte[] publicKeyCose) throws IOException {
         String accountAddress = createSoulAccount(publicKeyCose, ERC4337Const.ACCOUNT_SALT);
         //账户打钱
@@ -274,6 +307,7 @@ public class ERC4337Utils {
         userOperation.setPreVerificationGas(new BigInteger("21000"));
         userOperation.setMaxFeePerGas(new BigInteger("1000000050"));
         userOperation.setMaxPriorityFeePerGas(new BigInteger("1000000000"));
+        userOperation.setPaymasterAndData(createPaymasterAndData());
 
         //获取userOp签名
 //        byte[] userOpSignature = createUserOpSignature(wallet, userOperation);
