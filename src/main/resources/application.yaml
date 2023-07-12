@@ -1,3 +1,5 @@
+server:
+  port: 58080
 logging:
   level:
     org.springframework.security: DEBUG
@@ -21,14 +23,15 @@ spring:
   profiles:
     active: dev
 webauthn:
-  relying-party-id: localhost
+  relying-party-id: asn.aspark.space
   relying-party-name: Example Application
   relying-party-icon: http://localhost:8080/assets/logo.png
-  relying-party-origins: http://localhost:8080
+  relying-party-origins: http://localhost:58080,https://asn.aspark.space,http://localhost:30000
   endpoints:
     registrationStartPath: /api/registration/start
     registrationAddPath: /api/registration/add
     registrationFinishPath: /api/registration/finish
     assertionStartPath: /api/assertion/start
     assertionFinishPath: /api/assertion/finish
+
 
