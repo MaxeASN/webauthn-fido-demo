@@ -21,7 +21,6 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.factory.PasswordEncoderFactories;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
-
 @Configuration
 @EnableJpaRepositories
 @EntityScan("com.mih.webauthn.demo")

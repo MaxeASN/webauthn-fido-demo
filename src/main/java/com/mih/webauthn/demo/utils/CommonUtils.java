@@ -1,7 +1,11 @@
 package com.mih.webauthn.demo.utils;
 
+import com.mih.webauthn.demo.constant.ERC20Const;
+
 import java.io.PrintWriter;
 import java.io.StringWriter;
+
+import static com.mih.webauthn.demo.constant.BlockchainConst.GOERLI_ID;
 
 public class CommonUtils {
     public static String toStackTrace(Exception e)
@@ -15,5 +19,19 @@ public class CommonUtils {
         } catch(Exception e1) {
             return "";
         }
+    }
+
+    public static String chainId2name(String chainId){
+        if(chainId.equals(GOERLI_ID + "")){
+            return "goerli";
+        }
+        return chainId;
+    }
+
+    public static String coinId2Name(Integer coinId) {
+        if(coinId.equals(ERC20Const.COIN_MAIN)){
+            return "ETH";
+        }
+        return "undefine";
     }
 }

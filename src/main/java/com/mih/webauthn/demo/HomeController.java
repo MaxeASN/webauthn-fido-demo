@@ -61,7 +61,7 @@ public class HomeController {
 
     @GetMapping("/api/userInfo")
     @ResponseBody
-    @CrossOrigin(origins = "http://localhost:3000", allowCredentials = "true")
+    @CrossOrigin(origins = "http://localhost:30000", allowCredentials = "true")
     public CommonResult getUserInfo(){
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         if(!(authentication instanceof UsernamePasswordAuthenticationToken)){

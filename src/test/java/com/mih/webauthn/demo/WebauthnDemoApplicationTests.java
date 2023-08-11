@@ -10,15 +10,22 @@ import com.mih.webauthn.demo.domain.Transaction;
 import com.mih.webauthn.demo.domain.TransactionRepo;
 import com.mih.webauthn.demo.domain.Wallet;
 import com.mih.webauthn.demo.domain.WalletRepo;
+import com.mih.webauthn.demo.domain.dto.L1RpcParams;
+import com.mih.webauthn.demo.domain.dto.L1RpcResponse;
 import com.mih.webauthn.demo.domain.erc4337.UserOperation;
 import com.mih.webauthn.demo.domain.vo.TransactionParams;
 import com.mih.webauthn.demo.exception.EthCallException;
-import com.mih.webauthn.demo.service.FidoService;
+import com.mih.webauthn.demo.exception.TransactionFailedException;
+import com.mih.webauthn.demo.service.L1RpcService;
 import com.mih.webauthn.demo.utils.AESUtils;
 import com.mih.webauthn.demo.utils.ERC4337Utils;
 import com.mih.webauthn.demo.utils.EthUtils;
 import com.upokecenter.cbor.CBORObject;
 import com.yubico.webauthn.data.ByteArray;
+import feign.Feign;
+import feign.Request;
+import feign.jackson.JacksonDecoder;
+import feign.jackson.JacksonEncoder;
 import io.github.webauthn.domain.WebAuthnCredentialsRepository;
 import io.github.webauthn.domain.WebAuthnUserRepository;
 import io.github.webauthn.jpa.JpaWebAuthnCredentials;
@@ -51,11 +58,8 @@ import java.math.BigDecimal;
 import java.math.BigInteger;
 import java.security.*;
 import java.security.interfaces.ECPublicKey;
-import java.util.Arrays;
-import java.util.Base64;
-import java.util.Collections;
-import java.util.List;
-import java.util.concurrent.CompletableFuture;
+import java.util.*;
+import java.util.concurrent.TimeUnit;
 
 @SpringBootTest
 class WebauthnDemoApplicationTests {
@@ -86,9 +90,6 @@ class WebauthnDemoApplicationTests {
 
 	@Autowired
 	private TransactionRepo transactionRepo;
-
-	@Autowired
-	private FidoService fidoService;
 
 	@Test
 	void contextLoads() throws CoseException, NoSuchAlgorithmException, InvalidKeyException, SignatureException {
@@ -190,8 +191,8 @@ class WebauthnDemoApplicationTests {
 
 	@Test
 	public void putUserOpTo4337() throws IOException {
-		Wallet wallet = walletRepo.findByAppUserId(120L).iterator().next();
-		JpaWebAuthnCredentials credentials = webAuthnCredentialsRepository.findAllByAppUserId(120L).get(0);
+		Wallet wallet = walletRepo.findByAppUserId(248L).iterator().next();
+		JpaWebAuthnCredentials credentials = webAuthnCredentialsRepository.findAllByAppUserId(248L).get(0);
 		System.out.println(Numeric.toHexString(credentials.getPublicKeyCose()));
 
 		erc4337Utils.registerSoulAccount(wallet, credentials.getPublicKeyCose());
@@ -243,7 +244,7 @@ class WebauthnDemoApplicationTests {
 
 	@Test
 	public void testCreateSoulAccountAddress() throws IOException {
-		JpaWebAuthnCredentials credentials = webAuthnCredentialsRepository.findAllByAppUserId(120L).get(0);
+		JpaWebAuthnCredentials credentials = webAuthnCredentialsRepository.findAllByAppUserId(248L).get(0);
 		byte[] publicKey = credentials.getPublicKeyCose();
 		List<Type> typeList = ethUtils.ethCall(ERC4337Const.FACTORY_ADDRESS,
 				"createAccount",
@@ -266,7 +267,7 @@ class WebauthnDemoApplicationTests {
 		userOperation.setPreVerificationGas(new BigInteger("21000"));
 		userOperation.setMaxFeePerGas(new BigInteger("1000000050"));
 		userOperation.setMaxPriorityFeePerGas(new BigInteger("1000000000"));
-		userOperation.setFIDOPubKey(fidoPublicKey);
+		userOperation.setFidoPublickey(fidoPublicKey);
 		DynamicStruct userOpStruct = ERC4337Utils.createUserOpStruct(userOperation);
 
 		Function function = new Function(ERC4337Const.HANDLE_USEROPERATION,
@@ -285,8 +286,8 @@ class WebauthnDemoApplicationTests {
 
 	@Test
 	public void testGetContractAddressByPbKey() throws IOException {
-		JpaWebAuthnCredentials credentials = webAuthnCredentialsRepository.findAllByAppUserId(120L).get(0);
-		List<Type> typeList = ethUtils.ethCall("0xa4997c961E73EcF14CE54C9448451B224b498dD3",
+		JpaWebAuthnCredentials credentials = webAuthnCredentialsRepository.findAllByAppUserId(248L).get(0);
+		List<Type> typeList = ethUtils.ethCall(ERC4337Const.ACCOUNT_LIST_ADDRESS,
 				"Get",
 				List.of(new DynamicBytes(credentials.getPublicKeyCose())),
 				Arrays.asList(new TypeReference<Bool>() {}, new TypeReference<Address>() {}));
@@ -337,8 +338,8 @@ class WebauthnDemoApplicationTests {
 
 	@Test
 	public void testTransferL1TokenOnL2() throws IOException {
-		JpaWebAuthnCredentials credentials = webAuthnCredentialsRepository.findAllByAppUserId(120L).get(0);
-		Wallet wallet = walletRepo.findByAppUserId(120L).iterator().next();
+		JpaWebAuthnCredentials credentials = webAuthnCredentialsRepository.findAllByAppUserId(248L).get(0);
+		Wallet wallet = walletRepo.findByAppUserId(248L).iterator().next();
 		String accountAddress = wallet.getContractAddress();
 
 		UserOperation userOperation = new UserOperation();
@@ -354,12 +355,12 @@ class WebauthnDemoApplicationTests {
         System.out.println(FunctionEncoder.encode(callData));
 		byte[] callDataBytes = Numeric.hexStringToByteArray(FunctionEncoder.encode(callData));
 		userOperation.setCallData(callDataBytes);
-		userOperation.setCallGasLimit(new BigInteger("200000"));
+		userOperation.setCallGasLimit(new BigInteger("500000"));
 		userOperation.setVerificationGasLimit(new BigInteger("300000"));
 		userOperation.setPreVerificationGas(new BigInteger("21000"));
 		userOperation.setMaxFeePerGas(new BigInteger("1000000050"));
 		userOperation.setMaxPriorityFeePerGas(new BigInteger("1000000000"));
-		userOperation.setFIDOPubKey(credentials.getPublicKeyCose());
+		userOperation.setFidoPublickey(credentials.getPublicKeyCose());
 		DynamicStruct userOpStruct = ERC4337Utils.createUserOpStruct(userOperation);
 
 		String transactionHash = ethUtils.sendContract(wallet,
@@ -368,6 +369,59 @@ class WebauthnDemoApplicationTests {
 				Arrays.asList(new DynamicArray(DynamicStruct.class, userOpStruct), new Address(wallet.getAddress())),
 				Collections.emptyList());
 		System.out.println(transactionHash);
+	}
+
+	//新交易测试
+	@Test
+	public void testNewTransferL1TokenOnL2() throws IOException {
+		JpaWebAuthnCredentials credentials = webAuthnCredentialsRepository.findAllByAppUserId(248L).get(0);
+		Wallet wallet = walletRepo.findByAppUserId(248L).iterator().next();
+		String accountAddress = wallet.getContractAddress();
+
+		UserOperation userOperation = new UserOperation();
+		userOperation.setAddress(accountAddress);
+		BigInteger nonce = erc4337Utils.getAccountNonce(accountAddress);
+		userOperation.setNonce(nonce);
+		BigDecimal value = Convert.toWei("0.001", Convert.Unit.ETHER);
+		byte[] l1TxData = erc4337Utils.createL1TxData(5, ERC20Const.COIN_MAIN, "0x6b4825a86698c4cf967a35c6e034c9fa76465383", "0x6D4181bA47d2341C3491124ADe939dd5A6F76eaE", value, "");
+		System.out.println(Numeric.toHexString(l1TxData));
+		userOperation.setL1TxData(l1TxData);
+		userOperation.setCallGasLimit(new BigInteger("500000"));
+		userOperation.setVerificationGasLimit(new BigInteger("300000"));
+		userOperation.setPreVerificationGas(new BigInteger("21000"));
+		userOperation.setMaxFeePerGas(new BigInteger("1000000050"));
+		userOperation.setMaxPriorityFeePerGas(new BigInteger("1000000000"));
+		userOperation.setFidoPublickey(credentials.getPublicKeyCose());
+//		userOperation.setPaymasterAndData(erc4337Utils.createPaymasterAndData());
+		DynamicStruct userOpStruct = ERC4337Utils.createUserOpStruct(userOperation);
+
+		String transactionHash = ethUtils.sendContract(wallet,
+				ERC4337Const.ENTRYPOINT_ADDRESS,
+				ERC4337Const.HANDLE_USEROPERATION,
+				Arrays.asList(new DynamicArray(DynamicStruct.class, userOpStruct), new Address(wallet.getAddress())),
+				Collections.emptyList());
+		System.out.println(transactionHash);
+	}
+
+	@Test
+	public void testRegister() throws IOException {
+		JpaWebAuthnCredentials credentials = webAuthnCredentialsRepository.findAllByAppUserId(248L).get(0);
+		System.out.println(Numeric.toHexString(credentials.getPublicKeyCose()));
+		Wallet wallet = walletRepo.findByAppUserId(248L).iterator().next();
+		String accountAddress = erc4337Utils.createSoulAccount(credentials.getPublicKeyCose(), ERC4337Const.ACCOUNT_SALT);
+		String registerHash;
+		try {
+			DynamicStruct registerUserOp = erc4337Utils.createRegisterUserOp(accountAddress, credentials.getPublicKeyCose());
+			registerHash = ethUtils.sendContract(wallet,
+					ERC4337Const.ENTRYPOINT_ADDRESS,
+					ERC4337Const.HANDLE_USEROPERATION,
+					Arrays.asList(new DynamicArray(DynamicStruct.class, registerUserOp), new Address(wallet.getAddress())),
+					Collections.emptyList());
+		} catch (Exception e) {
+			System.out.println("注册SoulAccount失败:" + e.getMessage());
+			throw new TransactionFailedException("注册SoulAccount失败");
+		}
+		System.out.println("注册hash：" + registerHash);
 	}
 
 	@Test
@@ -396,7 +450,7 @@ class WebauthnDemoApplicationTests {
 
 	@Test
 	public void testSaveTransaction(){
-		com.mih.webauthn.demo.domain.Transaction transaction = new Transaction(120L, "1", 1, "0xd6af81d4b9e9c3fa2044e2fe3b7c052ca312575e", "0x6D4181bA47d2341C3491124ADe939dd5A6F76eaE",
+		com.mih.webauthn.demo.domain.Transaction transaction = new Transaction(120L, "1", 1, 2L, "0x6D4181bA47d2341C3491124ADe939dd5A6F76eaE",
 				new BigDecimal("0.01"), "0x1234");
 		transactionRepo.save(transaction);
 	}
@@ -410,6 +464,30 @@ class WebauthnDemoApplicationTests {
 	@Test
 	public void printNonce() throws IOException {
 		System.out.println(web3j.ethGetTransactionCount(BlockchainConst.MINER_ADDRESS, DefaultBlockParameterName.LATEST).send().getTransactionCount());
+	}
+
+	@Test
+	public void createL1Address() throws InterruptedException {
+		L1RpcService l1RpcService = Feign.builder()
+				.encoder(new JacksonEncoder())
+				.decoder(new JacksonDecoder())
+				.options(new Request.Options(3L, TimeUnit.SECONDS, 5L, TimeUnit.SECONDS, true))
+				.target(L1RpcService.class, "http://192.168.0.176:2789");
+		L1RpcResponse l1RpcResponse = l1RpcService.maxeRegistL1(L1RpcParams.registerL1Params(3328, "0x74A2AD6bdCF2fD7075f22cDE7c3e86a70f3B9fF2"));
+		System.out.println("---------");
+	}
+
+	@Test
+	public void getL1TxHash() throws IOException {
+		//第一个是TxState合约地址，第二个是from
+		List<Type> result = ethUtils.ethCall("0x0a030d4d1af7803c33e859ccd59af2a7aa1c15d1", "getL1Txhash", Arrays.asList(new Address("0xEF304700DdA9A0E41a4299e55a97857773b6fbef"), new Uint64(2)), List.of(new TypeReference<DynamicBytes>() {
+		}));
+		System.out.println(Numeric.toHexString(((DynamicBytes) result.get(0)).getValue()));
+	}
+
+	@Test
+	public void test() {
+		System.out.println(Map.of("message", "用户尚未登录"));
 	}
 
 }

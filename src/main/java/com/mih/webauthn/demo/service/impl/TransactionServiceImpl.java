@@ -7,6 +7,7 @@ import com.mih.webauthn.demo.domain.L1Address;
 import com.mih.webauthn.demo.domain.L1AddressRepo;
 import com.mih.webauthn.demo.domain.Transaction;
 import com.mih.webauthn.demo.domain.TransactionRepo;
+import com.mih.webauthn.demo.domain.vo.TransactionDetails;
 import com.mih.webauthn.demo.service.TransactionService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -38,5 +39,13 @@ public class TransactionServiceImpl implements TransactionService {
     public boolean verifyFromAddress(String fromAddress, Long userId) {
         L1Address entity = l1AddressRepo.findByL1Address(fromAddress);
         return Objects.equals(entity.getAppUserId(), userId);
+    }
+
+    @Override
+    public TransactionDetails getTransactionDetailsById(Integer transactionId) {
+        Transaction transaction = transactionRepo.findById(transactionId).get();
+        String from = l1AddressRepo.findById(transaction.getL1AddressId()).get().getL1Address();
+        return new TransactionDetails(transaction, from);
+
     }
 }

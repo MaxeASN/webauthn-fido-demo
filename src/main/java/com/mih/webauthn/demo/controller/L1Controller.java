@@ -24,7 +24,7 @@ import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping("api/l1")
-@CrossOrigin(origins = "http://localhost:3000", allowCredentials = "true")
+@CrossOrigin(origins = "http://localhost:30000", allowCredentials = "true")
 public class L1Controller {
     @Autowired
     private L1AddressRepo l1AddressRepo;

@@ -17,6 +17,7 @@ import java.util.Map;
 public class ServletUtils {
 
     private static final Logger log = LoggerFactory.getLogger(ServletUtils.class);
+
     @Autowired
     private ObjectMapper mapper ;
 
@@ -34,6 +35,10 @@ public class ServletUtils {
 
     public void writeToResponse(ServletResponse response, String body) throws IOException {
         writeToResponse(HttpServletResponse.SC_OK, response, body);
+    }
+
+    public void writeToResponse(ServletResponse response, Map<Object, Object> body) throws IOException {
+        writeToResponse(HttpServletResponse.SC_OK, response, mapper.writeValueAsString(body));
     }
 
     private void writeToResponse(int status, ServletResponse response, String body) throws IOException {

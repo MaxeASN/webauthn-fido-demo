@@ -35,7 +35,8 @@ public class Web3jConfig {
 //        Web3j web3j = Web3j.build(new HttpService("https://sepolia.infura.io/v3/ba60b163f0ad4e3a8f0c051511011cbd"));
 //        Web3j web3j = Web3j.build(new HttpService("http://localhost:8545"));
 //        Web3j web3j = Web3j.build(new HttpService("https://opt-goerli.g.alchemy.com/v2/o6trAJdz5w07mPyRtfSMK94KR4SMlDhw"));
-        Web3j web3j = Web3j.build(new HttpService("http://172.31.226.166:44546"));
+        Web3j web3j = Web3j.build(new HttpService("https://aspark.space/rpc"));
+//        Web3j web3j = Web3j.build(new HttpService("https://goerli.infura.io/v3/ba60b163f0ad4e3a8f0c051511011cbd"));
 
         //添加要监听事件的主题，和合约地址
 //        EthFilter filter = new EthFilter(DefaultBlockParameterName.EARLIEST, DefaultBlockParameterName.LATEST, ERC4337Const.ENTRYPOINT_ADDRESS);

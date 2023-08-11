@@ -9,6 +9,7 @@ import com.mih.webauthn.demo.domain.Transaction;
 import com.mih.webauthn.demo.domain.TransactionRepo;
 import com.mih.webauthn.demo.domain.Wallet;
 import com.mih.webauthn.demo.domain.WalletRepo;
+import com.mih.webauthn.demo.domain.vo.TransactionDetails;
 import com.mih.webauthn.demo.domain.vo.TransactionParams;
 import com.mih.webauthn.demo.exception.TransactionFailedException;
 import com.mih.webauthn.demo.service.TransactionService;
@@ -55,7 +56,7 @@ import java.util.Optional;
 
 @RestController
 @RequestMapping("api/transaction")
-@CrossOrigin(origins = "http://localhost:3000", allowCredentials = "true")
+@CrossOrigin(origins = "http://localhost:30000", allowCredentials = "true")
 public class TransactionController {
     private static final Logger log = LoggerFactory.getLogger(TransactionController.class);
 
@@ -184,6 +185,24 @@ public class TransactionController {
         JpaWebAuthnUser userEntity = webAuthnUserRepository.findByUsername(user.getUsername()).get();
         List<Transaction> transactionList = transactionService.findAllByAppUserId(userEntity.getId(), 1, 20);
         return CommonResult.success(CommonPage.restPage(transactionList));
+    }
+
+    @RequestMapping("queryOneTransaction")
+    public CommonResult<TransactionDetails> queryOneTransaction(@AuthenticationPrincipal UserDetails user,
+                                                                     @RequestParam Integer transactionId){
+        if(user == null){
+            return CommonResult.unAuthorization();
+        }
+        if (transactionRepo.findById(transactionId).isEmpty()) {
+            return CommonResult.failed("交易id有误");
+        }
+        JpaWebAuthnUser userEntity = webAuthnUserRepository.findByUsername(user.getUsername()).get();
+        Transaction transactionEntity = transactionRepo.findById(transactionId).get();
+        if (!transactionEntity.getAppUserId().equals(userEntity.getId())){
+            return CommonResult.failed("交易id有误");
+        }
+        TransactionDetails transactionDetails = transactionService.getTransactionDetailsById(transactionId);
+        return CommonResult.success(transactionDetails);
     }
 
     @RequestMapping("test")
