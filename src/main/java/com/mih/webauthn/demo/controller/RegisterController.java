@@ -161,7 +161,7 @@ public class RegisterController {
             if(l1RpcResponse.getError() != null){
                 throw new UserRegisterFailException("通过rpc请求导入私钥失败");
             }
-            //调合约注册
+//            调合约注册
             erc4337Utils.registerSoulAccount(wallet, credential.getPublicKeyCose());
 
             servletUtils.writeToResponse(response, json);

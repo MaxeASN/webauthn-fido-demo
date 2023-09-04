@@ -16,6 +16,7 @@ import com.mih.webauthn.demo.domain.erc4337.UserOperation;
 import com.mih.webauthn.demo.domain.vo.TransactionParams;
 import com.mih.webauthn.demo.exception.EthCallException;
 import com.mih.webauthn.demo.exception.TransactionFailedException;
+import com.mih.webauthn.demo.service.CredentialService;
 import com.mih.webauthn.demo.service.L1RpcService;
 import com.mih.webauthn.demo.utils.AESUtils;
 import com.mih.webauthn.demo.utils.ERC4337Utils;
@@ -60,6 +61,7 @@ import java.security.*;
 import java.security.interfaces.ECPublicKey;
 import java.util.*;
 import java.util.concurrent.TimeUnit;
+import java.util.stream.Collectors;
 
 @SpringBootTest
 class WebauthnDemoApplicationTests {
@@ -90,6 +92,9 @@ class WebauthnDemoApplicationTests {
 
 	@Autowired
 	private TransactionRepo transactionRepo;
+
+	@Autowired
+	private CredentialService credentialService;
 
 	@Test
 	void contextLoads() throws CoseException, NoSuchAlgorithmException, InvalidKeyException, SignatureException {
@@ -486,8 +491,10 @@ class WebauthnDemoApplicationTests {
 	}
 
 	@Test
-	public void test() {
-		System.out.println(Map.of("message", "用户尚未登录"));
+	public void testWebAuthnCredentialsRepository() throws IOException {
+//		credentialService.deleteCredential(293L, "pQECAyYgASFYIFEjVfNtzqV64adnfz54p0sAnJI+SoLnh6b9s6r2i1FzIlggF8ONyqCMpfc2s6Imt6dFhana05lNMCvO7e1WMf1LP8A=");
+		List<JpaWebAuthnCredentials> collect = credentialsRepository.findAllByAppUserId(293L).stream().filter((JpaWebAuthnCredentials credential) -> credential.getCredentialId() == null).collect(Collectors.toList());
+//		System.out.println(Base64.getEncoder().encodeToString(collect.get(0).getPublicKeyCose()));
 	}
 
 }
