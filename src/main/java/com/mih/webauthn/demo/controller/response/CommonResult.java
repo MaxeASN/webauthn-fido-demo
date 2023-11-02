@@ -39,6 +39,10 @@ public class CommonResult<T> {
         return new CommonResult<T>(ResultCode.SUCCESS, message, data);
     }
 
+    public static <T> CommonResult<T> halfSuccess(String message) {
+        return new CommonResult<T>(ResultCode.HALF_SUCCESS, message, null);
+    }
+
     /**
      * 失败返回结果
      * @param errorMsg 错误信息
