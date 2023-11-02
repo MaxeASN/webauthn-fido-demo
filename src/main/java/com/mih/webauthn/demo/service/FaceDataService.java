@@ -8,4 +8,6 @@ public interface FaceDataService {
     List<String> queryAllFaceData();
 
     boolean isImported(long userId);
+
+    String queryOneFaceData(Long id);
 }

@@ -35,4 +35,13 @@ public class FaceDataServiceImpl implements FaceDataService {
     public boolean isImported(long userId) {
         return false;
     }
+
+    @Override
+    public String queryOneFaceData(Long id) {
+        UserFaceData userFaceData = faceDataRepo.findUserFaceDataByAppUserId(id);
+        if(userFaceData == null){
+            return "";
+        }
+        return userFaceData.getFaceData();
+    }
 }

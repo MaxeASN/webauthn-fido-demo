@@ -1,20 +1,21 @@
 package com.mih.webauthn.demo.controller;
 
+import com.mih.webauthn.demo.constant.CommonConst;
 import com.mih.webauthn.demo.controller.response.CommonResult;
-import com.mih.webauthn.demo.domain.UserFaceDataRepo;
 import com.mih.webauthn.demo.service.FaceDataService;
 import io.github.webauthn.domain.WebAuthnUser;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.Arrays;
 
 @RestController
 @RequestMapping("api/faceData")
-@CrossOrigin(origins = "http://localhost:30000", allowCredentials = "true")
+//@CrossOrigin(origins = "http://localhost:30000", allowCredentials = "true")
 public class FaceDataController {
     @Autowired
     private FaceDataService faceDataService;
@@ -43,13 +44,23 @@ public class FaceDataController {
     }
 
     @RequestMapping("queryAllFaceData")
-    public CommonResult queryAllFaceData(@AuthenticationPrincipal UserDetails user, @RequestParam String apiKey) {
-        if(user == null){
-            return CommonResult.unAuthorization();
-        }
-        if(!apiKey.equals("")){
+    public CommonResult queryAllFaceData(@RequestParam String apiKey) {
+        if(!apiKey.equals(CommonConst.API_KEY)){
             return CommonResult.failed("apiKey有误");
         }
         return CommonResult.success(faceDataService.queryAllFaceData());
+    }
+
+    @RequestMapping("queryLoginUserFace")
+    public CommonResult queryLoginUserFace(@AuthenticationPrincipal UserDetails user) {
+        if(user == null){
+            return CommonResult.unAuthorization();
+        }
+        WebAuthnUser userEntity = (WebAuthnUser) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        String faceData = faceDataService.queryOneFaceData(userEntity.getId());
+        if(!StringUtils.hasText(faceData)){
+            return CommonResult.halfSuccess("The user has not yet entered facial data.");
+        }
+        return CommonResult.success(faceData);
     }
 }

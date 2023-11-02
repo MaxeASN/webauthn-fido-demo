@@ -4,6 +4,7 @@ import com.mih.webauthn.demo.constant.ERC20Const;
 
 import java.io.PrintWriter;
 import java.io.StringWriter;
+import java.util.Arrays;
 
 import static com.mih.webauthn.demo.constant.BlockchainConst.GOERLI_ID;
 
@@ -33,5 +34,16 @@ public class CommonUtils {
             return "ETH";
         }
         return "undefine";
+    }
+
+    public static boolean isFaceData(String faceData) {
+        return Arrays.stream(faceData.split(",")).allMatch((String floatStr) -> {
+            try{
+                Float.parseFloat(floatStr);
+            }catch (Exception e){
+                return false;
+            }
+            return true;
+        });
     }
 }
