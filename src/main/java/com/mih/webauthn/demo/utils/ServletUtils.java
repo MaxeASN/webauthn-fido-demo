@@ -1,11 +1,15 @@
 package com.mih.webauthn.demo.utils;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.mih.webauthn.demo.domain.vo.RegisterParams;
+import io.github.webauthn.dto.AssertionFinishRequest;
+import io.github.webauthn.dto.RegistrationStartRequest;
 import io.github.webauthn.dto.RegistrationStartResponse;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
+import org.springframework.web.bind.annotation.RequestParam;
 
 import javax.servlet.ServletRequest;
 import javax.servlet.ServletResponse;
@@ -23,6 +27,14 @@ public class ServletUtils {
 
     public <T> T parseRequest(ServletRequest request, Class<T> clasz) throws IOException {
         return mapper.readValue(request.getReader(), clasz);
+    }
+
+    public RegistrationStartRequest parseRegisterParams(RegisterParams registerParams) {
+        RegistrationStartRequest body = new RegistrationStartRequest();
+        body.setUsername(registerParams.getUsername());
+        body.setRecoveryToken(registerParams.getRecoveryToken());
+        body.setRegistrationAddToken(registerParams.getRegistrationAddToken());
+        return body;
     }
 
     public void writeBadRequestToResponse(ServletResponse response, RegistrationStartResponse body) throws IOException {
